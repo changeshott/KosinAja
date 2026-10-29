@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Profil Saya - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="profil" data-judul="Profil Saya">
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten">
+    <header id="topbar"></header>
+
+    <nav class="jejak">
+      <a href="./"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Dashboard Pengelola</a>
+      <span>/</span><b>Profil Saya</b>
+    </nav>
+
+    <div class="flex items-center gap-5 mb-8 bg-white rounded-2xl shadow-lembut p-7 max-sm:flex-col max-sm:items-start">
+      <span class="inisial v0 size-16 text-22" data-akun="inisial">..</span>
+      <div class="min-w-0 flex-1">
+        <h1 class="judul-halaman truncate" data-akun="nama">Profil Saya</h1>
+        <p class="sub-halaman break-all" data-akun="email"></p>
+      </div>
+      <span class="pill-status hijau">Mitra Pemilik Kos</span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 items-start max-lg:grid-cols-1">
+      <form class="seksi mb-0" id="form-profil" novalidate>
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#004ac6" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span>
+          <div><h2>Data Pemilik</h2><p>Nama dan nomor WhatsApp tampil ke calon penyewa</p></div>
+        </div>
+        <div class="field">
+          <label for="nama_lengkap">Nama Lengkap <span class="wajib">*</span></label>
+          <input class="input" id="nama_lengkap" name="nama_lengkap" maxlength="150" autocomplete="name" required>
+          <span class="galat-field" data-galat="nama_lengkap"></span>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input class="input" id="email" name="email" type="email" readonly>
+          <small>Email dipakai untuk masuk dan tidak bisa diubah.</small>
+        </div>
+        <div class="field">
+          <label for="no_telepon">Nomor WhatsApp Aktif <span class="wajib">*</span></label>
+          <input class="input" id="no_telepon" name="no_telepon" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" required>
+          <small>Calon penyewa menghubungi Anda lewat nomor ini.</small>
+          <span class="galat-field" data-galat="no_telepon"></span>
+        </div>
+        <div class="field">
+          <label for="nik">NIK e-KTP</label>
+          <input class="input" id="nik" readonly>
+          <small>Hanya tampil sebagian dan tidak pernah ditampilkan ke penyewa. Hubungi admin KosinAja jika ada kesalahan NIK.</small>
+        </div>
+        <button type="submit" class="btn-biru self-start">Simpan Perubahan</button>
+      </form>
+
+      <form class="seksi mb-0" id="form-sandi" novalidate>
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#004ac6" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+          <div><h2>Ganti Kata Sandi</h2><p>Gunakan minimal 8 karakter yang tidak dipakai di situs lain</p></div>
+        </div>
+        <div class="field">
+          <label for="password_lama">Kata Sandi Lama <span class="wajib">*</span></label>
+          <input class="input" id="password_lama" name="password_lama" type="password" autocomplete="current-password" required>
+          <span class="galat-field" data-galat="password_lama"></span>
+        </div>
+        <div class="field">
+          <label for="password_baru">Kata Sandi Baru <span class="wajib">*</span></label>
+          <input class="input" id="password_baru" name="password_baru" type="password" autocomplete="new-password" minlength="8" required>
+          <span class="galat-field" data-galat="password_baru"></span>
+        </div>
+        <div class="field">
+          <label for="konfirmasi">Konfirmasi Kata Sandi Baru <span class="wajib">*</span></label>
+          <input class="input" id="konfirmasi" name="konfirmasi" type="password" autocomplete="new-password" required>
+          <span class="galat-field" data-galat="konfirmasi"></span>
+        </div>
+        <button type="submit" class="btn-biru self-start">Ganti Kata Sandi</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/inti/profil.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!(await Panel.mulai({ butuhKos: false }))) return;
+    document.querySelector('#nik').value = Panel.admin.nik_samar || '-';
+    pasangProfil(Panel.admin, {
+      saatTersimpan: (baru) => { document.querySelector('#nama-admin').textContent = baru.nama_lengkap; },
+    });
+  });
+</script>
+</body>
+</html>
