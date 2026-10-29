@@ -1,0 +1,63 @@
+# URL bersih KosinAja (Apache + mod_rewrite, Laragon sudah aktif).
+#   /                     -> index.php (cek database, lalu tampilkan Beranda)
+#   /katalog              -> frontend/katalog.html        (semua halaman penyewa)
+#   /admin/ , /admin/kamar -> frontend/admin/index.html, frontend/admin/kamar.html
+#   /assets/...           -> css, js, gambar di frontend/assets/
+#   /api/katalog?...      -> backend/api/katalog.php
+#   /uploads/...          -> backend/uploads/...
+# Bisa dibuka lewat http://localhost/KosinAja/ maupun http://kosinaja.test/.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+
+# HTML/JS/CSS selalu dicek ulang ke server (cepat, cukup 304 kalau tidak berubah),
+# supaya perubahan kode langsung terlihat tanpa harus Ctrl+F5.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|js|css)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
+
+# Halaman 404 bergaya KosinAja. Path-nya beda antara localhost/KosinAja/ dan kosinaja.test/.
+<If "%{REQUEST_URI} =~ m#^/kosinaja/#i">
+    ErrorDocument 404 /KosinAja/404.php
+</If>
+<Else>
+    ErrorDocument 404 /404.php
+</Else>
+
+RewriteEngine On
+
+# BASE = path folder project di URL ("/KosinAja/" atau "/"), dipakai untuk redirect
+RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
+RewriteRule ^(.*)$ - [E=BASE:%1]
+
+# Hasil rewrite di bawah (file asli) tidak diproses ulang
+RewriteCond %{ENV:REDIRECT_STATUS} !^$
+RewriteRule ^ - [L]
+
+# --- Folder & file internal tidak boleh dibuka langsung dari browser ---
+RewriteRule ^(backend|database)(/|$) - [R=404,L]
+RewriteRule (^|/)(\.git|\.gitignore|README\.md)(/|$) - [R=404,L]
+RewriteRule ^(node_modules|frontend/tailwind)(/|$) - [R=404,L]
+RewriteRule ^package(-lock)?\.json$ - [R=404,L]
+
+# --- Alamat lama (.html / frontend/) dialihkan permanen ke alamat bersih ---
+RewriteRule ^(?:frontend/)?(.*/)?index\.html$ %{ENV:BASE}$1 [R=301,L]
+RewriteRule ^(?:frontend/)?(.+)\.html$ %{ENV:BASE}$1 [R=301,L]
+RewriteRule ^frontend/(.*)$ %{ENV:BASE}$1 [R=301,L]
+RewriteRule ^admin$ %{ENV:BASE}admin/ [R=301,L]
+
+RewriteRule ^favicon\.ico$ frontend/assets/img/favicon.svg [L]
+
+# --- API & foto unggahan ---
+RewriteRule ^api/([a-z-]+)/?$ backend/api/$1.php [QSA,L]
+RewriteRule ^uploads/(.+)$ backend/uploads/$1 [L]
+
+# --- Panel pemilik ---
+RewriteRule ^admin/$ frontend/admin/index.html [L]
+RewriteRule ^admin/([a-z-]+)$ frontend/admin/$1.html [L]
+
+# --- Halaman penyewa & aset ---
+RewriteRule ^assets/(.+)$ frontend/assets/$1 [L]
+RewriteRule ^([a-z-]+)$ frontend/$1.html [L]

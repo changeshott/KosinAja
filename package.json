@@ -1,0 +1,16 @@
+{
+  "name": "kosinaja",
+  "private": true,
+  "description": "Build CSS Tailwind untuk frontend KosinAja",
+  "scripts": {
+    "build": "npm run build:situs && npm run build:auth && npm run build:admin",
+    "build:situs": "tailwindcss -i frontend/tailwind/situs.css -o frontend/assets/css/situs.css --minify",
+    "build:auth": "tailwindcss -i frontend/tailwind/auth.css -o frontend/assets/css/auth.css --minify",
+    "build:admin": "tailwindcss -i frontend/tailwind/admin.css -o frontend/assets/css/admin.css --minify",
+    "dev": "node frontend/tailwind/watch.js"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
+  }
+}

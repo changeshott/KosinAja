@@ -1,0 +1,21 @@
+# Berisi password database, salin dari backend/config/config.example.php
+backend/config/config.php
+
+# Foto hasil unggahan pengguna (folder tetap ada lewat .gitkeep)
+backend/uploads/kos/*
+backend/uploads/kamar/*
+!backend/uploads/kos/.gitkeep
+!backend/uploads/kamar/.gitkeep
+# Foto contoh untuk seed_dummy.sql (1-depan.jpg, 3-a.jpg, ...)
+!backend/uploads/kos/*-*.jpg
+!backend/uploads/kamar/*-*.jpg
+
+# Email lupa kata sandi (mode localhost) & paket npm untuk build Tailwind
+backend/storage/
+node_modules/
+
+# Editor & OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
