@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Kelola Penyewa - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="penyewa" data-judul="Kelola Penyewa">
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten">
+    <header id="topbar"></header>
+
+    <nav class="jejak">
+      <a href="./"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Dashboard Pengelola</a>
+      <span>/</span><b>Kelola Penyewa</b>
+    </nav>
+
+    <section class="grid grid-cols-4 gap-4 mb-6 max-lg:grid-cols-2 max-sm:grid-cols-1
+                    [&>div]:bg-white [&>div]:rounded-2xl [&>div]:shadow-lembut [&>div]:p-5 [&>div]:min-h-[130px] [&>div]:flex [&>div]:flex-col
+                    [&_.kepala]:flex [&_.kepala]:justify-between [&_.kepala]:items-center [&_.kepala]:text-12 [&_.kepala]:font-semibold [&_.kepala]:tracking-[.4px] [&_.kepala]:text-abu [&_.kepala]:uppercase
+                    [&_b]:font-judul [&_b]:text-28 [&_b]:leading-[35px] [&_b]:mt-3 [&_b]:mb-auto [&_small]:text-11 [&_small]:text-abu [&_small]:mt-3">
+      <div class="[&_svg]:text-aksen">
+        <div class="kepala">Total Penyewa <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7M16 3.1a4 4 0 0 1 0 7.8M22 21c0-3-1.8-5.6-4.5-6.6"/></svg></div>
+        <b id="r-total">0</b><small>Seluruh penyewa yang pernah disetujui</small>
+      </div>
+      <div class="[&_svg]:text-aksen [&_b]:text-hijau">
+        <div class="kepala">Penyewa Aktif <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7s7 3.1 7 7M16 11l2 2 4-4"/></svg></div>
+        <b id="r-aktif">0</b><small id="r-aktif-ket">Sedang menghuni kamar</small>
+      </div>
+      <div class="[&_svg]:text-oranye-tua [&_b]:text-oranye-tua">
+        <div class="kepala">Belum Lunas <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v3M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M21 12h-4a2 2 0 0 0 0 4h4z"/></svg></div>
+        <b id="r-belum">0</b><small id="r-belum-ket">Rp 0 belum diterima</small>
+      </div>
+      <div class="[&_svg]:text-[#e5484d] [&_b]:text-[#e5484d]">
+        <div class="kepala">Berakhir ≤ 30 Hari <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5M16 2v4M8 2v4M3 10h5"/><circle cx="16" cy="16" r="6"/><path d="M16 14v2l1 1"/></svg></div>
+        <b id="r-berakhir">0</b><small>Tawarkan perpanjangan sewa</small>
+      </div>
+    </section>
+
+    <section class="kartu p-0 overflow-visible">
+      <div class="flex justify-between items-center gap-4 p-6 max-sm:flex-col max-sm:items-start">
+        <div>
+          <h2 class="m-0 font-judul text-18">Daftar Penyewa</h2>
+          <p class="mt-1.5 mb-0 text-12 text-abu">Data penghuni, masa sewa, dan status pembayaran di properti Anda.</p>
+        </div>
+        <button class="inline-flex items-center gap-2 h-[42px] px-4 rounded-xl border border-garis bg-white text-navy font-semibold text-13 hover:bg-biru-pucat hover:text-aksen" id="btn-ekspor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Ekspor Data
+        </button>
+      </div>
+
+      <div class="flex gap-3 px-6 pb-5 max-lg:flex-wrap [&_.input-cari]:max-w-[376px] [&_.input-cari]:max-lg:max-w-none [&_.input-cari]:max-lg:basis-full [&_.input-cari_input]:h-[42px] [&_.select-putih_select]:h-[42px] [&_.select-putih_select]:border [&_.select-putih_select]:border-garis [&_.select-putih]:max-sm:flex-1">
+        <label class="input-cari">
+          <img src="../assets/img/ikon-cari.svg" width="15" height="15" alt="">
+          <input type="search" id="cari" placeholder="Cari nama, email, atau nomor kamar...">
+        </label>
+        <label class="select-putih"><select id="f-kamar"><option value="">Semua Kamar</option></select>
+          <img src="../assets/img/ikon-select.svg" width="10" height="6.16667" alt=""></label>
+        <label class="select-putih"><select id="f-bayar">
+            <option value="">Semua Pembayaran</option><option>Belum Bayar</option><option>DP</option><option>Lunas</option>
+          </select><img src="../assets/img/ikon-select.svg" width="10" height="6.16667" alt=""></label>
+        <label class="select-putih"><select id="f-urut">
+            <option value="berakhir">Berakhir Terdekat</option><option value="terbaru">Masuk Terbaru</option><option value="nama">Nama A-Z</option>
+          </select><img src="../assets/img/ikon-select.svg" width="10" height="6.16667" alt=""></label>
+      </div>
+
+      <div class="tab-status garis-bawah" id="tab-status" role="tablist">
+        <button class="aktif" data-status="">Semua Penyewa <span class="hitung" data-n="">0</span></button>
+        <button data-status="aktif">Aktif <span class="hitung" data-n="aktif">0</span></button>
+        <button data-status="akan_masuk">Akan Masuk <span class="hitung" data-n="akan_masuk">0</span></button>
+        <button data-status="selesai">Selesai <span class="hitung" data-n="selesai">0</span></button>
+      </div>
+
+      <div class="tabel-wrap">
+        <table class="tabel-penyewa">
+          <thead><tr>
+            <th>Penyewa</th><th>Kamar &amp; Unit</th><th>Kontak</th><th>Masa Sewa</th><th>Pembayaran</th><th>Tindakan</th>
+          </tr></thead>
+          <tbody id="isi-tabel"><tr><td colspan="6" class="kosong">Memuat data...</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center py-5 px-6 text-12 text-abu max-sm:flex-col max-sm:gap-3">
+        <span id="info-hasil"></span>
+        <div class="paginasi" id="paginasi"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="modal-detail"><div class="modal-isi lebar" role="dialog" aria-modal="true"></div></div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/penyewa.js"></script>
+</body>
+</html>
