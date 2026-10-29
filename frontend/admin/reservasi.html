@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Pengajuan Reservasi - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="reservasi" data-judul="Pengajuan Reservasi">
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten" id="konten">
+    <header id="topbar"></header>
+
+    <!-- Priority Section: Reservasi Masuk & Butuh Respon Cepat -->
+    <section class="bg-white rounded-3xl pt-6 px-6 pb-4 drop-shadow-[0_1px_1px_rgba(0,0,0,.05)]">
+      <div class="flex gap-3 items-center">
+        <span class="size-10 rounded-xl grid place-items-center shrink-0 bg-kuning-muda"><img src="../assets/img/ikon-lonceng.svg" width="20" height="20.05" alt=""></span>
+        <div>
+          <h2 class="m-0 font-judul text-20 leading-7 font-semibold flex items-center gap-2 flex-wrap">Reservasi &amp; Booking Terbaru <span class="badge-oranye" id="badge-menunggu" hidden></span></h2>
+          <p class="m-0 text-12 leading-4 text-abu">Konfirmasi reservasi calon penyewa untuk mengamankan kamar dan tanda jadi (DP)</p>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-4 mb-2 flex-wrap">
+        <label class="btn-pill">
+          <span class="sr-only">Filter status</span>
+          <select id="filter-status">
+            <option value="menunggu">Filter Status: Menunggu Respon</option>
+            <option value="Pending">Pending</option>
+            <option value="Survei">Survei</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Ditolak">Ditolak</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+            <option value="Kedaluwarsa">Kedaluwarsa</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </label>
+        <button class="btn-pill biru" id="lihat-semua">Lihat Semua</button>
+      </div>
+
+      <div class="tabel-wrap">
+        <table class="tabel-reservasi">
+          <thead>
+            <tr>
+              <th>Calon Penyewa</th>
+              <th>Kamar Diminati</th>
+              <th>Tgl Masuk &amp;<br>Durasi</th>
+              <th>Total &amp; Status DP</th>
+              <th>Tindakan Respon Cepat</th>
+            </tr>
+          </thead>
+          <tbody id="tabel"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/reservasi.js"></script>
+</body>
+</html>
