@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Tambah Kos - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="dashboard" data-judul="Tambah Kos" data-gedung>
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten">
+    <header id="topbar"></header>
+
+    <form id="form-kos" novalidate>
+      <nav class="jejak">
+        <a href="./"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Dashboard Pengelola</a>
+        <span>/</span><b id="crumb-akhir">Tambah Kos</b>
+      </nav>
+
+      <div class="flex justify-between items-center gap-6 mb-8 bg-white rounded-2xl shadow-lembut p-7 max-md:flex-col max-md:items-start">
+        <div>
+          <h1 class="judul-halaman" id="judul-form">Tambah Kos</h1>
+          <p class="sub-halaman">Daftarkan gedung kos Anda. Setelah tersimpan, lanjutkan dengan menambahkan kamar agar kos bisa ditemukan mahasiswa.</p>
+          <p class="mt-2.5 mb-0 text-12 text-abu">Kolom bertanda <span class="wajib">*</span> wajib diisi.</p>
+        </div>
+        <span class="inline-flex items-center gap-1.5 py-2 px-3.5 rounded-full bg-biru-pucat text-aksen text-12 font-semibold whitespace-nowrap [&.terbit]:bg-hijau-muda [&.terbit]:text-hijau-tua" id="status-form">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4M14 2v6h6M20 8v2M13.4 21.4l6.2-6.2a1.9 1.9 0 0 0-2.7-2.7l-6.2 6.2L10 22z"/></svg>
+          <span>Draf</span>
+        </span>
+      </div>
+
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-1.svg" width="16.5" height="16.5" alt=""></span>
+          <div><h2>Informasi Kos</h2><p>Nama, jenis penghuni, dan alamat yang tampil di halaman pencarian</p></div>
+        </div>
+        <div class="field">
+          <label for="nama_kos">Nama Kos <span class="wajib">*</span></label>
+          <input class="input" id="nama_kos" name="nama_kos" maxlength="150" placeholder="Contoh: Kos Griya Suhat Asri" required>
+          <small>Gunakan nama yang tertera di papan depan supaya mudah dicari saat survei.</small>
+          <span class="galat-field" data-galat="nama_kos"></span>
+        </div>
+        <div class="field">
+          <span class="label">Jenis Kos <span class="wajib">*</span></span>
+          <div class="flex gap-3 flex-wrap [&_label]:inline-flex [&_label]:items-center [&_label]:gap-2.5 [&_label]:h-10 [&_label]:pr-4 [&_label]:pl-3 [&_label]:rounded-full [&_label]:border [&_label]:border-garis [&_label]:bg-white [&_label]:font-medium [&_label]:cursor-pointer [&_label]:has-checked:border-aksen [&_label]:has-checked:bg-biru-pucat [&_label]:has-checked:text-aksen [&_input]:size-[17px] [&_input]:m-0">
+            <label><input type="radio" name="tipe_kos" value="pria"> Putra</label>
+            <label><input type="radio" name="tipe_kos" value="wanita"> Putri</label>
+            <label><input type="radio" name="tipe_kos" value="campuran"> Campur</label>
+          </div>
+          <span class="galat-field" data-galat="tipe_kos"></span>
+        </div>
+        <div class="field">
+          <label for="alamat">Alamat Lengkap <span class="wajib">*</span></label>
+          <textarea class="input" id="alamat" name="alamat" rows="3" placeholder="Jl. Soekarno Hatta Gg. 5 No. 12, RT 02 RW 05" required></textarea>
+          <small>Sertakan nama gang, nomor rumah, dan patokan terdekat.</small>
+          <span class="galat-field" data-galat="alamat"></span>
+        </div>
+      </section>
+
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#004ac6" stroke-width="2"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <div><h2>Lokasi</h2><p>Dipakai filter lokasi dan urutan "Terdekat" di katalog</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="kecamatan">Kecamatan <span class="wajib">*</span></label>
+            <input class="input" id="kecamatan" name="kecamatan" list="daftar-kecamatan" maxlength="100" placeholder="Lowokwaru" required>
+            <datalist id="daftar-kecamatan">
+              <option value="Lowokwaru"><option value="Blimbing"><option value="Klojen"><option value="Sukun"><option value="Kedungkandang">
+            </datalist>
+            <span class="galat-field" data-galat="kecamatan"></span>
+          </div>
+          <div class="field">
+            <label for="kota">Kota</label>
+            <input class="input" id="kota" name="kota" maxlength="100" value="Malang">
+          </div>
+          <div class="field">
+            <label for="jarak_kampus_km">Jarak ke Kampus</label>
+            <label class="input-satuan"><input class="input" type="number" id="jarak_kampus_km" name="jarak_kampus_km" step="0.1" min="0" placeholder="0.8"><span>km</span></label>
+            <span class="galat-field" data-galat="jarak_kampus_km"></span>
+          </div>
+          <div class="field">
+            <label for="google_maps_url">Link Google Maps</label>
+            <input class="input" type="url" id="google_maps_url" name="google_maps_url" placeholder="https://maps.app.goo.gl/...">
+            <small>Buka Google Maps, pilih lokasi kos, lalu Bagikan &gt; Salin link.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-5.svg" width="14.6667" height="18.3333" alt=""></span>
+          <div><h2>Deskripsi &amp; Peraturan Kos</h2><p>Gambaran lingkungan kos dan aturan yang berlaku untuk semua penghuni</p></div>
+        </div>
+        <div class="field">
+          <label for="deskripsi">Deskripsi</label>
+          <textarea class="input" id="deskripsi" name="deskripsi" rows="4" placeholder="Kos tenang 5 menit jalan kaki ke Polinema, dekat warung makan dan laundry. Parkir motor luas dan ada CCTV 24 jam."></textarea>
+        </div>
+        <div class="field">
+          <label for="peraturan_kos">Peraturan Kos</label>
+          <textarea class="input" id="peraturan_kos" name="peraturan_kos" rows="3" placeholder="Satu peraturan per baris, misalnya: Jam malam pukul 22.00 WIB"></textarea>
+        </div>
+      </section>
+
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-3.svg" width="18.333" height="13.819" alt=""></span>
+          <div><h2>Fasilitas Bersama</h2><p>Fasilitas gedung yang dipakai bersama semua penghuni</p></div>
+        </div>
+        <div class="grid-cek" id="cek-fasilitas"></div>
+      </section>
+
+      <section class="seksi">
+        <div class="seksi-kepala antara">
+          <div class="flex items-center gap-4">
+            <span class="seksi-ikon"><img src="../assets/img/seksi-6.svg" width="18.3333" height="18.3333" alt=""></span>
+            <div><h2>Foto Gedung Kos</h2><p>Foto pertama menjadi sampul di katalog</p></div>
+          </div>
+          <span class="pill-jumlah" id="jumlah-foto">0 / 8 Foto Terunggah</span>
+        </div>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="input-foto" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          <span class="dropzone-ikon"><img src="../assets/img/ikon-unggah.svg" width="23.8333" height="17.3333" alt=""></span>
+          <b>Tarik &amp; lepas foto gedung di sini, atau telusuri berkas</b>
+          <small>JPG, PNG, WEBP hingga 2MB per file. Tampak depan, area parkir, dan ruang bersama.</small>
+          <span class="btn-pilih-foto">Pilih Foto dari Komputer</span>
+        </label>
+        <div class="galeri" id="galeri"></div>
+      </section>
+
+      <div class="kaki-form">
+        <div class="flex gap-2 flex-wrap">
+          <a href="./" class="btn-kembali">Kembali</a>
+          <button type="button" class="btn-hapus" id="btn-hapus" hidden>Hapus Kos</button>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button type="submit" class="btn-draf" data-publish="0"><img src="../assets/img/ikon-draf.svg" width="12" height="13.5" alt="">Simpan Draf</button>
+          <button type="submit" class="btn-publikasi" data-publish="1"><img src="../assets/img/ikon-roket.svg" width="16.706" height="16.725" alt="">Simpan &amp; Publikasi</button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/galeri.js"></script>
+<script src="../assets/js/admin/tambah-kos.js"></script>
+</body>
+</html>
