@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Bantuan - KosinAja</title>
+  <meta name="description" content="Pusat bantuan KosinAja: cara mencari kos, mengajukan sewa, survei, pembayaran, akun, dan panduan pemilik kos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="bantuan">
+<header id="kepala"></header>
+<main>
+  <section class="bg-white border-b border-garis pb-10 text-center">
+    <div class="wadah">
+      <p class="jejak"><a href="./">Beranda</a> / <b>Bantuan</b></p>
+      <span class="pill-label">Pusat Bantuan KosinAja</span>
+      <h1 class="my-3 text-36">Ada yang bisa kami bantu?</h1>
+      <p class="text-abu m-0">Cari jawaban seputar pencarian kos, pengajuan sewa, survei, pembayaran, akun, dan pengelolaan kos.</p>
+      <form class="kotak-cari kotak max-w-[780px] mx-auto mt-7" id="form-cari" role="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="q">Cari bantuan</label>
+        <input id="q" name="q" type="search" autocomplete="off" placeholder="Contoh: cara membatalkan reservasi"
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="saran-cari">
+        <kbd class="pintas-kbd" title="Tekan / untuk mulai mencari">/</kbd>
+        <button class="btn-utama" type="submit">Cari Jawaban</button>
+        <div class="saran-cari" id="saran-cari" role="listbox" aria-label="Saran jawaban" hidden></div>
+      </form>
+      <div class="pintasan mt-4" id="cari-populer">
+        <span>Sering dicari:</span>
+        <button type="button" data-cari="batalkan reservasi">Batalkan reservasi</button>
+        <button type="button" data-cari="survei lokasi">Survei lokasi</button>
+        <button type="button" data-cari="bayar DP">Bayar DP</button>
+        <button type="button" data-cari="lupa kata sandi">Lupa kata sandi</button>
+        <button type="button" data-cari="daftar kos pemilik">Daftarkan kos</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-2">
+    <div class="wadah">
+      <span class="text-12 font-bold tracking-[.8px] text-aksen uppercase">Langkah mudah</span>
+      <h2 class="my-2 text-26">Cara menyewa kos lewat KosinAja</h2>
+      <p class="text-abu mt-0 mb-7 text-15">Empat langkah dari mencari sampai mulai tinggal.</p>
+      <div class="grid grid-cols-4 gap-7 max-md:grid-cols-2 max-sm:grid-cols-1 [&_b]:block [&_b]:mt-3.5 [&_b]:mb-2 [&_b]:text-15 [&_p]:m-0 [&_p]:text-abu [&_p]:leading-[1.6] [&_p]:text-13">
+        <div><span class="size-9 rounded-full bg-aksen text-white grid place-items-center font-bold">1</span><b>Cari &amp; saring kos</b><p>Buka <a class="tautan" href="katalog">Katalog Kos</a>, saring berdasarkan harga, jenis, kecamatan, dan fasilitas.</p></div>
+        <div><span class="size-9 rounded-full bg-aksen text-white grid place-items-center font-bold">2</span><b>Pilih kamar</b><p>Di Detail Kos, bandingkan kamar, fasilitas, peraturan, minimal sewa, dan ulasan penghuni.</p></div>
+        <div><span class="size-9 rounded-full bg-aksen text-white grid place-items-center font-bold">3</span><b>Ajukan reservasi</b><p>Isi tanggal masuk dan durasi sewa. Centang survei kalau ingin melihat lokasi dulu.</p></div>
+        <div><span class="size-9 rounded-full bg-aksen text-white grid place-items-center font-bold">4</span><b>Tunggu konfirmasi</b><p>Pemilik merespons maksimal 1×24 jam. Pantau statusnya di <a class="tautan" href="reservasi-saya">Reservasi Saya</a>, lalu atur pembayaran langsung dengan pemilik.</p></div>
+      </div>
+      <p class="flex gap-2.5 items-center mt-6 text-13 text-aksen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Selalu survei atau minta video kamar sebelum membayar uang muka.</p>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-2" id="status">
+    <div class="wadah">
+      <span class="text-12 font-bold tracking-[.8px] text-aksen uppercase">Alur reservasi</span>
+      <h2 class="my-2 text-26">Arti status reservasi</h2>
+      <p class="text-abu mt-0 mb-7 text-15">Status yang kamu lihat di Reservasi Saya dan yang dikelola pemilik di panelnya.</p>
+      <div class="grid grid-cols-3 gap-4 max-md:grid-cols-2 max-sm:grid-cols-1 [&>div]:bg-white [&>div]:border [&>div]:border-garis [&>div]:rounded-[14px] [&>div]:py-[18px] [&>div]:px-5 [&_p]:mt-2.5 [&_p]:mb-0 [&_p]:text-abu [&_p]:text-13 [&_p]:leading-[1.6]">
+        <div><span class="status-res kuning">Menunggu konfirmasi</span><p>Pengajuan terkirim. Pemilik punya waktu 1×24 jam untuk merespons. Kamu masih bisa membatalkan.</p></div>
+        <div><span class="status-res biru">Jadwal survei</span><p>Pemilik menetapkan jadwal kunjungan. Kontak WhatsApp pemilik muncul di Reservasi Saya. Masih bisa dibatalkan.</p></div>
+        <div><span class="status-res hijau">Disetujui</span><p>Kamar dipesan untukmu. Atur pembayaran (DP atau lunas) langsung dengan pemilik.</p></div>
+        <div><span class="status-res biru">Selesai</span><p>Masa sewa berakhir. Sekarang kamu bisa memberi rating dan ulasan untuk kos tersebut.</p></div>
+        <div><span class="status-res merah">Ditolak</span><p>Pemilik tidak bisa menerima pengajuan. Alasannya tampil sebagai catatan pemilik.</p></div>
+        <div><span class="status-res abu">Dibatalkan / Kedaluwarsa</span><p>Dibatalkan olehmu atau pemilik, atau tidak direspons dalam 1×24 jam. Kamar kembali tersedia.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-2">
+    <div class="wadah">
+      <h2 class="my-2 text-26">Kategori panduan</h2>
+      <p class="text-abu mt-0 mb-7 text-15">Pilih topik sesuai kebutuhanmu.</p>
+      <div class="kartu-topik grid grid-cols-3 gap-5 max-md:grid-cols-2 max-sm:grid-cols-1">
+        <button type="button" class="kartu-info" data-topik="cari"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><b>Mencari Kos</b><p>Kotak cari, filter harga dan fasilitas, status kamar, dan favorit.</p></button>
+        <button type="button" class="kartu-info" data-topik="sewa"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><b>Reservasi &amp; Survei</b><p>Mengajukan, membatalkan, dan menjadwalkan survei kamar.</p></button>
+        <button type="button" class="kartu-info" data-topik="bayar"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg></span><b>Pembayaran</b><p>DP, pelunasan, deposit kunci, dan tips menghindari penipuan.</p></button>
+        <button type="button" class="kartu-info" data-topik="akun"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span><b>Akun &amp; Ulasan</b><p>Daftar, masuk, kontak pemilik, ulasan, dan data pribadi.</p></button>
+        <button type="button" class="kartu-info" data-topik="pemilik"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 4l9 7M5 10v10h14V10"/></svg></span><b>Untuk Pemilik Kos</b><p>Mendaftarkan kos, menambah kamar, dan mengelola reservasi.</p></button>
+        <a class="kartu-info" href="#kontak"><span class="ikon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><b>Hubungi Kami</b><p>Belum menemukan jawaban? Kirim pertanyaanmu ke tim KosinAja.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-2" id="faq">
+    <div class="wadah">
+      <h2 class="my-2 text-26">Pertanyaan umum</h2>
+      <p class="text-abu mt-0 mb-7 text-15">Klik pertanyaan untuk melihat jawabannya.</p>
+      <div class="grid grid-cols-[236px_1fr] gap-10 max-md:grid-cols-1 max-md:gap-6">
+        <nav class="topik-faq" id="topik-faq" aria-label="Topik pertanyaan">
+          <button type="button" class="aktif" data-topik="">Semua topik <span></span></button>
+          <button type="button" data-topik="cari">Mencari Kos <span></span></button>
+          <button type="button" data-topik="sewa">Reservasi &amp; Survei <span></span></button>
+          <button type="button" data-topik="bayar">Pembayaran <span></span></button>
+          <button type="button" data-topik="akun">Akun &amp; Ulasan <span></span></button>
+          <button type="button" data-topik="pemilik">Untuk Pemilik <span></span></button>
+        </nav>
+        <div>
+          <div class="info-faq" id="info-faq" aria-live="polite"></div>
+          <div class="daftar-faq" id="daftar-faq">
+
+            <!-- Mencari kos -->
+            <details id="cara-mencari" data-topik="cari" data-kata="cari temukan search kotak saran ketik nama jalan kecamatan lokasi">
+              <summary>Bagaimana cara mencari kos yang sesuai?</summary>
+              <div class="isi-faq">
+                <p>Ketik nama kos, nama jalan, atau kecamatan di kotak cari Beranda atau Katalog. Saran kos dan lokasi muncul saat kamu mengetik, dan salah ketik sedikit tetap ditemukan (misalnya "sukarno hata" tetap menemukan "Soekarno Hatta"). Tekan <kbd>/</kbd> untuk langsung mengetik di kotak cari.</p>
+                <a class="tautan" href="katalog">Buka Katalog Kos &rarr;</a>
+              </div>
+            </details>
+            <details id="filter-katalog" data-topik="cari" data-kata="filter saring harga murah budget fasilitas ac wifi putra putri campur kecamatan kosong">
+              <summary>Bagaimana menyaring kos berdasarkan harga dan fasilitas?</summary>
+              <div class="isi-faq">
+                <p>Di Katalog Kos, gunakan panel Filter: harga per bulan (atau pilihan cepat seperti "&lt; 750 rb"), jenis kos putra/putri/campur, kecamatan, fasilitas, dan "hanya yang ada kamar kosong". Filter langsung diterapkan tanpa perlu menekan tombol. Kos yang tampil harus punya <b>semua</b> fasilitas yang kamu centang.</p>
+                <a class="tautan" href="katalog">Coba filter di Katalog &rarr;</a>
+              </div>
+            </details>
+            <details id="status-kamar" data-topik="cari" data-kata="status kamar kosong penuh tersedia dipesan terisi perbaikan label">
+              <summary>Apa arti label Kosong, Penuh, dan status kamar?</summary>
+              <div class="isi-faq">
+                <p><b>Tersedia</b> berarti kamar bisa diajukan. <b>Dipesan</b> berarti sedang ada pengajuan yang diproses. <b>Terisi</b> berarti sedang disewa, dan <b>Perbaikan</b> berarti sementara tidak bisa dipesan. Label "2 Kosong" di kartu kos menunjukkan jumlah kamar berstatus Tersedia; "Penuh" berarti tidak ada kamar yang tersedia saat ini.</p>
+              </div>
+            </details>
+            <details id="favorit" data-topik="cari" data-kata="favorit simpan suka hati bookmark wishlist daftar">
+              <summary>Bagaimana menyimpan kos favorit?</summary>
+              <div class="isi-faq">
+                <p>Tekan ikon hati di kartu kos atau di halaman Detail Kos. Kamu perlu masuk sebagai penyewa. Semua kos yang disimpan bisa dilihat di menu akun <b>Kos Favorit</b>, dan bisa dihapus dengan menekan ikon hati yang sama.</p>
+                <a class="tautan" href="favorit">Buka Kos Favorit &rarr;</a>
+              </div>
+            </details>
+
+            <!-- Reservasi & survei -->
+            <details id="ajukan-sewa" data-topik="sewa" data-kata="ajukan sewa pesan booking reservasi tanggal masuk durasi bulan semester tahun minimal">
+              <summary>Bagaimana cara mengajukan sewa?</summary>
+              <div class="isi-faq">
+                <p>Buka Detail Kos, pilih kamar, lalu isi tanggal masuk dan durasi sewa (1, 3, 6, atau 12 bulan, mengikuti minimal sewa kamar tersebut). Kamu perlu masuk sebagai penyewa. Setelah terkirim, kamu mendapat kode reservasi yang bisa dipantau di Reservasi Saya.</p>
+                <a class="tautan" href="reservasi-saya">Lihat Reservasi Saya &rarr;</a>
+              </div>
+            </details>
+            <details id="lama-respons" data-topik="sewa" data-kata="lama respons respon konfirmasi tunggu menunggu jam kedaluwarsa expired otomatis">
+              <summary>Berapa lama pemilik merespons pengajuan?</summary>
+              <div class="isi-faq">
+                <p>Maksimal 1×24 jam. Kalau lewat batas itu, pengajuan otomatis berstatus <b>Kedaluwarsa</b>, kamar kembali tersedia, dan kamu bisa mengajukan lagi atau memilih kos lain.</p>
+              </div>
+            </details>
+            <details id="survei" data-topik="sewa" data-kata="survei survey kunjungan lihat lokasi cek kamar jadwal datang">
+              <summary>Apakah saya bisa survei sebelum menyewa?</summary>
+              <div class="isi-faq">
+                <p>Bisa. Saat mengajukan, centang "Mau survei lokasi dulu?" dan isi usulan waktunya. Pemilik akan menetapkan jadwal survei, status berubah menjadi <b>Jadwal survei</b>, dan tombol Chat Pemilik (WhatsApp) muncul di Reservasi Saya.</p>
+              </div>
+            </details>
+            <details id="batalkan-reservasi" data-topik="sewa" data-kata="batal batalkan cancel membatalkan reservasi pengajuan tidak jadi">
+              <summary>Bagaimana cara membatalkan reservasi?</summary>
+              <div class="isi-faq">
+                <p>Buka Reservasi Saya, lalu tekan <b>Batalkan</b> pada pengajuan berstatus Menunggu konfirmasi atau Jadwal survei. Setelah Disetujui, pembatalan hanya bisa dilakukan oleh pemilik, jadi hubungi pemilik lewat tombol Chat Pemilik.</p>
+                <a class="tautan" href="reservasi-saya">Buka Reservasi Saya &rarr;</a>
+              </div>
+            </details>
+            <details id="ditolak" data-topik="sewa" data-kata="ditolak tolak alasan catatan gagal">
+              <summary>Kenapa pengajuan saya ditolak?</summary>
+              <div class="isi-faq">
+                <p>Pemilik bisa menolak pengajuan, misalnya karena tanggal masuk tidak cocok atau kamar sudah dijanjikan. Alasannya tampil sebagai <b>Catatan pemilik</b> di Reservasi Saya. Kamu tetap bisa mengajukan ke kamar atau kos lain.</p>
+              </div>
+            </details>
+            <details id="tanggal-bentrok" data-topik="sewa" data-kata="tanggal bentrok tabrakan tidak bisa dipesan double booking ganda penuh">
+              <summary>Kenapa kamar tidak bisa dipesan di tanggal tertentu?</summary>
+              <div class="isi-faq">
+                <p>Sistem menolak pemesanan yang periodenya bertabrakan dengan sewa lain yang sudah disetujui atau sedang diproses, supaya tidak ada pemesanan ganda. Coba tanggal masuk lain atau pilih kamar lain di kos yang sama.</p>
+              </div>
+            </details>
+            <details id="status-reservasi" data-topik="sewa" data-kata="status reservasi arti menunggu pending disetujui selesai ditolak dibatalkan kedaluwarsa">
+              <summary>Apa arti status reservasi saya?</summary>
+              <div class="isi-faq">
+                <p>Ada tujuh status: Menunggu konfirmasi, Jadwal survei, Disetujui, Selesai, Ditolak, Dibatalkan, dan Kedaluwarsa. Penjelasan lengkap tiap status ada di bagian Arti status reservasi.</p>
+                <a class="tautan" href="#status">Lihat arti status &rarr;</a>
+              </div>
+            </details>
+
+            <!-- Pembayaran -->
+            <details id="cara-bayar" data-topik="bayar" data-kata="bayar pembayaran transfer lunas tagihan kuitansi uang sewa">
+              <summary>Bagaimana cara membayar sewa?</summary>
+              <div class="isi-faq">
+                <p>Pembayaran dilakukan langsung kepada pemilik kos setelah reservasi <b>Disetujui</b>. KosinAja tidak memegang dana. Pemilik mencatat status pembayaran (Belum Bayar, DP, atau Lunas) dan statusnya tampil di Reservasi Saya. Pastikan kamu menerima kuitansi dari pemilik.</p>
+              </div>
+            </details>
+            <details id="dp" data-topik="bayar" data-kata="dp uang muka down payment panjar tanda jadi">
+              <summary>Apa itu DP dan kapan harus dibayar?</summary>
+              <div class="isi-faq">
+                <p>DP (uang muka) adalah sebagian biaya sewa untuk mengamankan kamar. Bayar DP hanya setelah reservasi berstatus Disetujui di KosinAja, dan sebaiknya setelah survei atau melihat video kamar. Besarnya disepakati dengan pemilik.</p>
+              </div>
+            </details>
+            <details id="deposit-kunci" data-topik="bayar" data-kata="deposit kunci jaminan dikembalikan biaya tambahan">
+              <summary>Apa itu deposit kunci?</summary>
+              <div class="isi-faq">
+                <p>Deposit kunci adalah uang jaminan yang ditetapkan sebagian pemilik dan dikembalikan saat masa sewa selesai. Besarnya tampil di rincian biaya Detail Kos sebelum kamu mengajukan sewa.</p>
+              </div>
+            </details>
+            <details id="hindari-penipuan" data-topik="bayar" data-kata="penipuan tipu aman keamanan scam palsu waspada transfer">
+              <summary>Bagaimana menghindari penipuan?</summary>
+              <div class="isi-faq">
+                <p>Survei lokasi atau minta video kamar dulu, bayar hanya setelah reservasi Disetujui, transfer hanya ke pemilik yang tercantum di KosinAja, dan simpan kuitansi. Laporkan ke kami kalau ada yang mencurigakan.</p>
+                <a class="tautan" href="#kontak">Laporkan ke KosinAja &rarr;</a>
+              </div>
+            </details>
+
+            <!-- Akun & ulasan -->
+            <details id="buat-akun" data-topik="akun" data-kata="daftar registrasi buat akun baru penyewa mahasiswa email google">
+              <summary>Bagaimana cara membuat akun penyewa?</summary>
+              <div class="isi-faq">
+                <p>Pilih Masuk / Daftar, lalu isi nama, email, nomor telepon, dan kata sandi. Setelah itu kamu bisa mengajukan sewa, menyimpan favorit, dan memberi ulasan. Masuk dengan Google sedang disiapkan.</p>
+                <a class="tautan" href="daftar">Daftar sekarang &rarr;</a>
+              </div>
+            </details>
+            <details id="kontak-pemilik" data-topik="akun" data-kata="whatsapp wa nomor kontak telepon hubungi pemilik chat">
+              <summary>Kenapa nomor WhatsApp pemilik tidak terlihat?</summary>
+              <div class="isi-faq">
+                <p>Kontak pemilik hanya tampil untuk pengguna yang sudah masuk, supaya nomor pemilik tidak diambil bot. Di Reservasi Saya, tombol Chat Pemilik muncul setelah reservasi berstatus Jadwal survei, Disetujui, atau Selesai.</p>
+                <a class="tautan" href="masuk">Masuk ke akun &rarr;</a>
+              </div>
+            </details>
+            <details id="beri-ulasan" data-topik="akun" data-kata="ulasan review rating bintang nilai komentar testimoni ubah edit hapus">
+              <summary>Kapan saya bisa memberi ulasan?</summary>
+              <div class="isi-faq">
+                <p>Setelah reservasimu berstatus <b>Selesai</b>. Tombol Beri Ulasan muncul di Reservasi Saya. Satu reservasi punya satu ulasan dengan rating 1 sampai 5 bintang dan komentar, yang masih bisa kamu ubah atau hapus lewat tombol <b>Ubah Ulasan</b>.</p>
+              </div>
+            </details>
+            <details id="lupa-sandi" data-topik="akun" data-kata="lupa kata sandi password reset sandi ganti ubah tidak bisa masuk login profil">
+              <summary>Saya lupa kata sandi, bagaimana?</summary>
+              <div class="isi-faq">
+                <p>Di halaman Masuk, pilih <b>Lupa password?</b> lalu masukkan email akunmu. Kami mengirim tautan untuk membuat kata sandi baru yang berlaku 30 menit. Kalau sudah masuk dan hanya ingin mengganti kata sandi, buka menu akun <b>Profil Saya</b>.</p>
+                <a class="tautan" href="lupa-sandi">Atur ulang kata sandi &rarr;</a>
+              </div>
+            </details>
+
+            <!-- Pemilik kos -->
+            <details id="daftarkan-kos" data-topik="pemilik" data-kata="daftar mitra pemilik iklan pasang kos baru tambah publikasi tayang">
+              <summary>Bagaimana mendaftarkan kos saya?</summary>
+              <div class="isi-faq">
+                <p>Daftar sebagai Mitra dengan NIK, lalu ikuti onboarding: isi data kos, tambahkan kamar beserta foto dan fasilitas, kemudian pilih <b>Simpan &amp; Publikasi</b>. Kos dan kamar yang disimpan sebagai draf belum tampil di katalog.</p>
+                <a class="tautan" href="daftar-mitra">Daftar sebagai Mitra &rarr;</a>
+              </div>
+            </details>
+            <details id="kelola-reservasi" data-topik="pemilik" data-kata="kelola pengajuan reservasi setujui tolak terima survei jadwal pembayaran catat selesai">
+              <summary>Bagaimana menanggapi pengajuan reservasi?</summary>
+              <div class="isi-faq">
+                <p>Buka Panel Pemilik, lalu pilih Pengajuan Reservasi. Di sana kamu bisa menyetujui, menolak dengan catatan, menjadwalkan survei, mencatat pembayaran (DP atau lunas), dan menandai sewa selesai. Respons dalam 1×24 jam agar pengajuan tidak kedaluwarsa.</p>
+              </div>
+            </details>
+            <details id="kamar-perbaikan" data-topik="pemilik" data-kata="perbaikan renovasi rusak kamar tidak tersedia nonaktif inventaris">
+              <summary>Bagaimana menandai kamar sedang diperbaiki?</summary>
+              <div class="isi-faq">
+                <p>Di Kelola Kamar &amp; Unit, tandai kamar sebagai Perbaikan. Kamar tidak bisa dipesan sampai kamu menandai perbaikan selesai. Kondisi barang di kamar (jumlah, Baik / Rusak / Hilang) dicatat lewat tombol <b>Inventaris</b> di kartu kamar.</p>
+              </div>
+            </details>
+            <details id="kelola-penyewa" data-topik="pemilik" data-kata="penyewa penghuni daftar aktif akan masuk selesai kelola">
+              <summary>Di mana saya melihat daftar penyewa?</summary>
+              <div class="isi-faq">
+                <p>Buka Kelola Penyewa di Panel Pemilik. Penyewa dikelompokkan menjadi Aktif, Akan Masuk, dan Selesai, dan bisa dicari berdasarkan nama, email, atau nomor kamar.</p>
+              </div>
+            </details>
+            <details id="nik-pemilik" data-topik="pemilik" data-kata="nik ktp identitas verifikasi privasi data pribadi">
+              <summary>Mengapa NIK pemilik diperlukan?</summary>
+              <div class="isi-faq">
+                <p>NIK dipakai untuk verifikasi pemilik dan perlindungan hukum perjanjian sewa. NIK tidak pernah ditampilkan ke penyewa, dan di panel pemilik pun hanya tampil sebagian.</p>
+              </div>
+            </details>
+          </div>
+          <div class="kosong-situs kosong-bantu" id="faq-kosong" hidden></div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center gap-6 bg-[linear-gradient(135deg,var(--color-aksen),var(--color-biru))] text-white rounded-[20px] py-7 px-8 mt-10 scroll-mt-24 max-sm:flex-col max-sm:items-start" id="kontak">
+        <div><h3 class="mt-0 mb-1.5 text-20">Masih butuh bantuan?</h3><p class="m-0 opacity-90">Tim KosinAja membalas email di hari kerja pukul 08.00 - 17.00 WIB.</p></div>
+        <a class="btn-garis border-0 text-aksen" id="tombol-email" href="mailto:halo@kosinaja.test?subject=Bantuan%20KosinAja">Email halo@kosinaja.test</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/halaman/bantuan.js"></script>
+</body>
+</html>

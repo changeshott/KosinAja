@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Reservasi Saya - KosinAja</title>
+  <meta name="description" content="Pantau status pengajuan sewa kos kamu.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="akun">
+<header id="kepala"></header>
+<main class="wadah">
+  <p class="jejak"><a href="./">Beranda</a> / Akun Saya / <b>Reservasi Saya</b></p>
+  <div class="flex justify-between items-end gap-6 mb-6 max-md:flex-col max-md:items-start">
+    <div>
+      <h1 class="m-0 text-32">Reservasi Saya</h1>
+      <p class="mt-1.5 mb-0 text-abu text-15">Pantau status pengajuan sewa, pembayaran, dan kos yang sedang kamu tempati.</p>
+    </div>
+    <a class="btn-garis" href="katalog"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Cari Kos Lain</a>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 mb-8 max-sm:grid-cols-1 [&>div]:bg-white [&>div]:border [&>div]:border-garis [&>div]:rounded-2xl [&>div]:p-5 [&_span]:text-12 [&_span]:text-abu [&_span]:font-medium [&_b]:block [&_b]:font-judul [&_b]:text-28 [&_b]:mt-1">
+    <div><span>Menunggu konfirmasi</span><b id="s-menunggu">0</b></div>
+    <div><span>Sewa aktif</span><b id="s-aktif">0</b></div>
+    <div><span>Riwayat</span><b id="s-riwayat">0</b></div>
+  </div>
+
+  <div class="tab-res" id="tab-res" role="tablist">
+    <button class="aktif" data-tab="semua">Semua <span data-n="semua">0</span></button>
+    <button data-tab="menunggu">Menunggu <span data-n="menunggu">0</span></button>
+    <button data-tab="disetujui">Disetujui <span data-n="disetujui">0</span></button>
+    <button data-tab="aktif">Aktif <span data-n="aktif">0</span></button>
+    <button data-tab="riwayat">Riwayat <span data-n="riwayat">0</span></button>
+  </div>
+
+  <div class="flex flex-col gap-5" id="daftar-res"><div class="kosong-situs"><b>Memuat reservasi...</b></div></div>
+
+  <div class="flex gap-3 items-center mt-6 py-4 px-5 rounded-[14px] bg-[#fffbeb] border border-[#fde68a] text-[#78350f] text-13 leading-normal">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    <span>Untuk masalah pembayaran, KosinAja tidak ikut campur. Selesaikan langsung dengan pemilik kos melalui nomor WhatsApp yang tertera setelah pengajuan diproses.</span>
+  </div>
+</main>
+
+<div class="modal-situs" id="modal-ulasan" hidden>
+  <form class="modal-kotak" id="form-ulasan" role="dialog" aria-modal="true" aria-labelledby="judul-ulasan">
+    <div class="modal-kepala">
+      <div class="flex justify-between items-start gap-4">
+        <h2 id="judul-ulasan">Beri Rating &amp; Ulasan</h2>
+        <button type="button" class="btn-tutup" data-tutup aria-label="Tutup"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
+      <p>Pengalamanmu membantu mahasiswa lain memilih kos yang tepat.</p>
+    </div>
+    <div class="modal-badan">
+      <div class="bg-latar rounded-[14px] p-4"><small class="text-12 text-abu font-semibold">Kos yang diulas</small><b class="block text-17 mt-1" id="nama-diulas"></b></div>
+      <div>
+        <div><b class="block text-16">Bagaimana pengalamanmu tinggal di sini?</b><small class="text-abu text-13">Pilih 1 sampai 5 bintang.</small></div>
+        <div class="flex items-center gap-6 mt-3 max-sm:flex-col max-sm:items-start max-sm:gap-2">
+          <div class="bintang-pilih flex gap-1" id="bintang-pilih" role="radiogroup" aria-label="Rating"></div>
+          <div><b class="block text-18" id="makna-rating">-</b><small class="text-abu text-13" id="nilai-rating">Belum dipilih</small></div>
+        </div>
+      </div>
+      <label class="flex flex-col gap-2 font-semibold text-15">Ceritakan pengalamanmu
+        <textarea class="min-h-[168px] border border-garis rounded-[14px] p-4 font-[inherit] text-14 font-normal resize-y focus:outline-2 focus:outline-aksen/30" name="komentar" maxlength="1000" placeholder="Contoh: WiFi kencang untuk kuliah online, pemilik responsif, lingkungan tenang untuk belajar."></textarea>
+        <span class="flex justify-between text-12 text-abu font-normal"><span>Hindari data pribadi seperti nomor HP atau alamat lengkap.</span><span id="jumlah-karakter">0/1000</span></span>
+      </label>
+    </div>
+    <div class="modal-kaki">
+      <button type="button" class="btn-garis btn-batal mr-auto" id="btn-hapus-ulasan" hidden>Hapus Ulasan</button>
+      <button type="button" class="btn-garis" data-tutup>Batal</button>
+      <button type="submit" class="btn-utama" id="btn-kirim-ulasan">Kirim Ulasan</button>
+    </div>
+  </form>
+</div>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/halaman/reservasi-saya.js"></script>
+</body>
+</html>

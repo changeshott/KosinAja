@@ -1,0 +1,131 @@
+/* ==========================================
+   KosinAja - Tailwind untuk Login, Registrasi, Lupa & Atur Kata Sandi
+   Dibuild jadi assets/css/auth.css (npm run build).
+   Tata letak kartu ditulis sebagai utility di HTML; panel branding (dibuat auth.js)
+   dan elemen form yang berulang didefinisikan di @layer components.
+   ========================================== */
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+@source "../masuk.html";
+@source "../masuk-pemilik.html";
+@source "../daftar.html";
+@source "../daftar-mitra.html";
+@source "../lupa-sandi.html";
+@source "../atur-sandi.html";
+@source "../assets/js/halaman/auth.js";
+@source "../assets/js/inti/api.js";
+
+@theme static {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-judul: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  --text-*: initial;
+  --text-11: 11px; --text-12: 12px; --text-13: 13px; --text-14: 14px; --text-15: 15px;
+  --text-16: 16px; --text-18: 18px; --text-22: 22px; --text-24: 24px; --text-26: 26px; --text-30: 30px; --text-32: 32px;
+
+  --breakpoint-*: initial;
+  --breakpoint-sm: 520px;
+  --breakpoint-md: 860px;
+  --breakpoint-lg: 1080px;
+
+  --color-aksen: #004ac6;
+  --color-aksen-tua: #003da6;
+  --color-biru: #2563eb;
+  --color-navy: #1e293b;
+  --color-abu: #64748b;
+  --color-abu-muda: #94a3b8;
+  --color-garis: #e2e8f0;
+  --color-latar: #f8fafc;
+  --color-coral: #ff6b6b;
+  --color-galat: #ba1a1a;
+  --color-hijau: #059669;
+  --color-hijau-muda: #d1fae5;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { @apply m-0 min-h-screen font-sans text-14 text-navy bg-latar grid place-items-center py-8 px-4 max-md:p-4 max-md:items-start max-md:justify-items-center; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; }
+  form { @apply flex flex-col gap-[18px]; }
+}
+
+@layer components {
+  /* ---------- Panel branding kiri (diisi auth.js) ---------- */
+  .branding { @apply relative overflow-hidden rounded-3xl p-8 bg-[linear-gradient(160deg,var(--color-biru)_0%,var(--color-aksen)_100%)] text-white flex flex-col min-h-[640px] max-md:min-h-0 max-md:p-6; }
+  .cahaya {
+    @apply absolute rounded-full blur-[60px] pointer-events-none;
+    &.langit { @apply size-[300px] -left-21 top-[190px] bg-[rgba(125,211,252,.35)]; }
+    &.hangat { @apply size-[260px] left-[302px] top-[296px] bg-[rgba(255,107,107,.35)]; }
+    &.terang { @apply size-[230px] left-[300px] -top-12 bg-white/25; }
+  }
+  .branding-atas { @apply relative flex justify-between items-center; }
+  .merek { @apply inline-flex items-center gap-2.5 font-judul font-bold text-18; }
+  .merek-lambang { @apply size-[30px] rounded-[9px] grid place-items-center bg-white text-aksen; }
+  .lencana { @apply inline-flex items-center gap-1.5 py-[7px] px-[11px] rounded-full text-11 font-semibold bg-white/16 border border-white/25; }
+  .ilustrasi {
+    @apply relative h-[300px] my-auto max-md:hidden;
+    & .halo, & .orbit { @apply absolute rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2; }
+    & .halo { @apply size-[270px] bg-white/8; }
+    & .orbit { @apply size-[214px] border-[1.5px] border-dashed border-white/35; }
+  }
+  .ubin-rumah { @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[141px] rounded-[36px] grid place-items-center bg-white text-aksen shadow-[0_20px_40px_-10px_rgba(0,0,0,.25)]; }
+  .chip {
+    @apply absolute inline-flex items-center gap-[7px] py-2.5 px-[13px] rounded-xl bg-white text-navy text-11 font-semibold shadow-[0_10px_20px_-6px_rgba(0,0,0,.2)];
+    & svg { @apply text-aksen; }
+    & .bintang { @apply text-[#f59e0b]; }
+    &.kanan { @apply right-1 top-[229px]; }
+    &.kiri { @apply left-2.5 top-[42px]; }
+  }
+  .pesan { @apply relative max-md:mt-6; }
+  .pengantar { @apply flex items-center gap-2.5 text-12 font-semibold tracking-[.04em] opacity-90 before:content-[''] before:w-[27px] before:h-0.5 before:bg-coral before:rounded-xs; }
+  .tagline { @apply font-judul text-32 leading-[1.15] font-bold mt-3 mb-0 max-lg:text-26 max-md:text-22; }
+  .deskripsi { @apply mt-4 mb-0 text-14 leading-[1.6] opacity-85 max-md:hidden; }
+
+  /* ---------- Form ---------- */
+  .field {
+    @apply flex flex-col gap-2;
+    & label { @apply text-13 font-semibold text-navy; }
+    & p { @apply m-0; }
+  }
+  .input {
+    @apply relative flex items-center;
+    & input { @apply w-full h-13 px-4 border border-garis rounded-[14px] bg-latar font-[inherit] text-14 text-navy outline-none transition duration-150 placeholder:text-abu-muda focus:border-biru focus:bg-white focus:shadow-[0_0_0_4px_rgba(37,99,235,.12)]; }
+    & input.salah { @apply border-galat; }
+    & .mata { @apply absolute right-3.5 text-abu grid place-items-center p-0.5 hover:text-navy; }
+    &:has(.mata) input { @apply pr-[46px]; }
+  }
+  .panduan { @apply text-12 text-abu; }
+  .galat-field { @apply text-12 text-galat empty:hidden; }
+  .setuju {
+    @apply flex gap-2.5 items-start text-13 text-abu leading-[1.45];
+    & input { @apply mt-0.5 mx-0 mb-0 size-4 accent-aksen; }
+    & a { @apply text-aksen font-semibold; }
+  }
+  .btn-utama { @apply h-13 rounded-[14px] bg-aksen text-white font-semibold text-14 shadow-[0_10px_20px_-8px_rgba(0,74,198,.5)] transition-colors duration-150 hover:bg-aksen-tua disabled:opacity-60 disabled:cursor-wait; }
+  .kaki {
+    @apply max-w-[440px] w-full text-center text-abu text-14 pt-4 border-t border-garis;
+    & a { @apply text-aksen font-semibold; }
+  }
+  .ganti-peran {
+    @apply block mt-1.5 text-12 text-abu font-medium;
+    & a { @apply font-semibold; }
+  }
+
+  /* Halaman registrasi (body.daftar) memakai isian yang lebih rapat */
+  .daftar {
+    & .input input { @apply h-11 rounded-xl; }
+    & .btn-utama { @apply h-11 rounded-xl; }
+    & .kaki { @apply max-w-[543px]; }
+  }
+
+  .toast {
+    @apply fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-[150%] bg-navy text-white py-3 px-5 rounded-[10px] text-13 transition-transform duration-250 z-60 max-w-[calc(100%-32px)];
+    &.tampil { @apply translate-y-0; }
+    &.gagal { @apply bg-galat; }
+  }
+}

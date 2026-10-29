@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Atur Kata Sandi Baru - KosinAja</title>
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body data-mode="reset" data-sebagai="penyewa">
+<main class="w-full max-w-[1120px] grid grid-cols-[488px_1fr] bg-white rounded-[32px] p-4 shadow-[0_10px_30px_-5px_rgba(30,41,59,.06)] max-lg:grid-cols-[400px_1fr] max-md:grid-cols-1 max-md:rounded-3xl max-md:p-2">
+  <section class="branding" id="branding"></section>
+
+  <section class="pt-[26px] pr-14 pb-6 pl-18 flex flex-col max-lg:py-6 max-lg:px-8 max-md:pt-6 max-md:px-4 max-md:pb-4">
+    <a href="./" class="merek text-navy max-md:hidden"><span class="merek-lambang bg-aksen text-white"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg></span>KosinAja</a>
+    <div class="my-auto pt-10 pb-6 max-w-[440px] w-full max-md:pt-2">
+      <h1 class="font-judul text-30 leading-[1.25] m-0 max-sm:text-24">Buat Kata Sandi Baru</h1>
+      <p class="text-abu text-15 mt-2 mb-6 leading-normal">Gunakan minimal 8 karakter. Setelah tersimpan, masuk dengan kata sandi baru.</p>
+
+      <form novalidate>
+        <div class="field">
+          <label for="password">Kata Sandi Baru</label>
+          <div class="input">
+            <input id="password" name="password" type="password" placeholder="Minimal 8 karakter" autocomplete="new-password" minlength="8" required>
+            <button type="button" class="mata" aria-label="Tampilkan kata sandi"></button>
+          </div>
+          <p class="galat-field" data-galat="password"></p>
+        </div>
+        <div class="field">
+          <label for="konfirmasi">Konfirmasi Kata Sandi</label>
+          <div class="input">
+            <input id="konfirmasi" name="konfirmasi" type="password" placeholder="Ulangi kata sandi" autocomplete="new-password" required>
+            <button type="button" class="mata" aria-label="Tampilkan konfirmasi sandi"></button>
+          </div>
+          <p class="galat-field" data-galat="konfirmasi"></p>
+        </div>
+        <p class="galat-field" data-galat="token"></p>
+        <button type="submit" class="btn-utama">Simpan Kata Sandi</button>
+      </form>
+
+      <div class="rounded-[14px] bg-hijau-muda text-[#065f46] p-5 text-14 leading-normal" id="berhasil" hidden>
+        <b class="block mb-1 text-15">Kata sandi baru tersimpan</b>
+        Silakan masuk dengan kata sandi baru Anda.
+        <div class="flex flex-wrap gap-2 mt-4">
+          <a class="btn-utama inline-flex items-center h-11 rounded-xl px-5" href="masuk">Masuk sebagai Penyewa</a>
+          <a class="inline-flex items-center h-11 px-5 rounded-xl bg-white text-aksen font-semibold" href="masuk-pemilik">Masuk sebagai Pemilik</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="kaki">Tautan kedaluwarsa? <a href="lupa-sandi">Minta tautan baru</a></p>
+  </section>
+</main>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/halaman/auth.js"></script>
+</body>
+</html>

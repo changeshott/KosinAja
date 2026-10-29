@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Detail Kos - KosinAja</title>
+  <meta name="description" content="Detail kos, kamar, fasilitas, dan reservasi online.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="katalog">
+<header id="kepala"></header>
+<main class="wadah" id="isi-detail">
+  <p class="jejak"><a href="./">Beranda</a> / <a href="katalog">Katalog Kos</a> / <b id="jejak-nama">...</b></p>
+  <div class="kosong-situs" id="memuat"><b>Memuat detail kos...</b></div>
+</main>
+
+<template id="tpl-detail">
+  <div class="flex justify-between items-start gap-6 mb-6 max-md:flex-col">
+    <div>
+      <span class="pill-label" data-isi="tipe"></span>
+      <h1 class="my-2 text-30 leading-[38px]" data-isi="nama"></h1>
+      <div class="info-baris" data-isi="info"></div>
+    </div>
+    <div class="flex gap-2 shrink-0">
+      <button class="btn-garis" id="btn-bagikan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Bagikan</button>
+      <button class="btn-garis" id="btn-favorit-detail"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg><span>Simpan</span></button>
+    </div>
+  </div>
+
+  <section class="galeri-detail" data-isi="galeri"></section>
+
+  <div class="tata-detail grid grid-cols-[minmax(0,1fr)_384px] gap-8 items-start max-lg:grid-cols-[minmax(0,1fr)_340px] max-md:grid-cols-1">
+    <div>
+      <section class="kartu-detail">
+        <h2>Spesifikasi Kamar</h2>
+        <div class="pilih-kamar" data-isi="pilih-kamar"></div>
+        <div class="spek" data-isi="spek"></div>
+      </section>
+
+      <section class="kartu-detail">
+        <h2>Deskripsi</h2>
+        <p data-isi="deskripsi"></p>
+      </section>
+
+      <section class="kartu-detail">
+        <h2>Fasilitas</h2>
+        <div data-isi="fasilitas"></div>
+      </section>
+
+      <section class="kartu-detail">
+        <h2>Peraturan Kos</h2>
+        <ol class="m-0 pl-5 leading-[1.9] text-teks" data-isi="aturan"></ol>
+      </section>
+
+      <section class="kartu-detail">
+        <h2>Lokasi &amp; Akses Kampus</h2>
+        <div class="lokasi-peta" data-isi="lokasi"></div>
+      </section>
+
+      <section class="kartu-detail" id="ulasan">
+        <h2>Ulasan Penghuni</h2>
+        <div data-isi="ulasan"></div>
+        <button class="btn-garis mt-4" id="btn-beri-ulasan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .7-5.3 4.8 1.6 7L12 17.5 5.7 21l1.6-7L2 9.3l7-.7z"/></svg>Beri ulasan</button>
+      </section>
+    </div>
+
+    <aside class="sticky top-25 bg-white rounded-[20px] border border-garis shadow-lembut p-7 max-md:static">
+      <div class="flex items-baseline gap-1.5 pb-5 mb-5 border-b border-garis"><b class="font-judul text-26 text-aksen" data-isi="harga"></b><span class="text-abu">/ bulan</span></div>
+      <form class="form-sewa" id="form-sewa" novalidate>
+        <label class="field">Tanggal Mulai Masuk Kos
+          <input type="date" name="tanggal_masuk" required>
+          <small>Bisa dibatalkan selama belum dikonfirmasi pemilik.</small>
+          <span class="galat-field" data-galat="tanggal_masuk"></span>
+        </label>
+        <label class="field">Durasi Sewa
+          <select name="durasi_sewa_bulan"></select>
+          <span class="galat-field" data-galat="durasi_sewa_bulan"></span>
+        </label>
+        <label class="flex gap-3 p-3.5 rounded-xl bg-biru-pucat text-13 leading-normal cursor-pointer"><input class="mt-[3px] accent-aksen" type="checkbox" name="is_survei_dahulu">
+          <span><b>Mau survei lokasi dulu?</b><br>Pemilik akan menjadwalkan kunjungan sebelum menyetujui sewa.</span></label>
+        <label class="field" id="field-survei" hidden>Usulan Waktu Survei
+          <input type="datetime-local" name="jadwal_survei">
+          <span class="galat-field" data-galat="jadwal_survei"></span>
+        </label>
+        <div class="rincian" data-isi="rincian"></div>
+        <span class="galat-field" data-galat="kamar_id"></span>
+        <button class="btn-utama" type="submit" id="btn-ajukan">Ajukan Reservasi Sekarang</button>
+        <a class="btn-garis btn-wa" id="btn-wa" target="_blank" rel="noopener">Chat Pemilik via WhatsApp</a>
+        <p class="text-12 text-abu text-center m-0" data-isi="catatan"></p>
+      </form>
+    </aside>
+  </div>
+
+  <section>
+    <div class="flex justify-between items-end gap-4 mt-10 mb-6 max-md:flex-col max-md:items-start"><div><h2 class="m-0 text-26">Pilihan kamar lain</h2><p class="mt-1 mb-0 text-abu">Kamar lain di kos yang sama</p></div>
+      <a class="link-detail" href="katalog">Lihat kos lain</a></div>
+    <div class="kamar-lain grid grid-cols-3 gap-6 max-md:grid-cols-2 max-sm:grid-cols-1" data-isi="kamar-lain"></div>
+  </section>
+</template>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/halaman/detail-kos.js"></script>
+</body>
+</html>

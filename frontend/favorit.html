@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Kos Favorit - KosinAja</title>
+  <meta name="description" content="Daftar kos yang kamu simpan di KosinAja.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="akun">
+<header id="kepala"></header>
+<main class="wadah">
+  <p class="jejak"><a href="./">Beranda</a> / Akun Saya / <b>Kos Favorit</b></p>
+  <div class="flex justify-between items-end gap-6 mb-6 max-md:flex-col max-md:items-start">
+    <div>
+      <h1 class="m-0 text-32">Kos Favorit</h1>
+      <p class="mt-1.5 mb-0 text-abu text-15" id="info-favorit">Memuat kos yang kamu simpan...</p>
+    </div>
+    <a class="btn-garis" href="katalog"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Cari Kos Lain</a>
+  </div>
+
+  <div class="grid-kos" id="grid-kos" aria-live="polite"></div>
+</main>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/halaman/favorit.js"></script>
+</body>
+</html>

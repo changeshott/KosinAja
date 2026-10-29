@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Katalog Kos - KosinAja</title>
+  <meta name="description" content="Katalog kos mahasiswa di sekitar kampus Malang dengan filter harga, jenis, dan fasilitas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="katalog">
+<header id="kepala"></header>
+<main>
+  <section class="bg-white border-b border-garis pb-8">
+    <div class="wadah">
+      <p class="jejak"><a href="./">Beranda</a> / <b>Katalog Kos</b></p>
+      <div class="flex justify-between items-center gap-6 mb-5 max-md:flex-col max-md:items-start">
+        <div>
+          <h1 class="m-0 text-32 leading-10">Katalog Kos Sekitar Kampus</h1>
+          <p class="mt-2 mb-0 text-abu text-15">Saring berdasarkan harga, jenis penghuni, dan fasilitas yang kamu butuhkan.</p>
+        </div>
+        <span class="pill-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Area Kampus Malang</span>
+      </div>
+      <form class="kotak-cari kotak" id="form-cari" role="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="q">Cari kos</label>
+        <input id="q" name="q" type="search" autocomplete="off" placeholder="Nama kos, jalan, atau kecamatan"
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="saran-cari">
+        <kbd class="pintas-kbd" title="Tekan / untuk mulai mencari">/</kbd>
+        <button class="btn-utama" type="submit">Cari <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+        <div class="saran-cari" id="saran-cari" role="listbox" aria-label="Saran pencarian kos" hidden></div>
+      </form>
+    </div>
+  </section>
+
+  <div class="wadah tata-katalog grid grid-cols-[264px_1fr] gap-6 items-start pt-8 max-md:grid-cols-1">
+    <form class="panel-filter" id="panel-filter" aria-labelledby="judul-filter">
+      <div class="flex justify-between items-center">
+        <h2 id="judul-filter">Filter Pencarian</h2>
+        <div class="kepala-kanan gap-3">
+          <button type="button" class="btn-reset" id="reset-filter">Reset</button>
+          <button type="button" class="hidden max-md:grid place-items-center size-9 rounded-[10px] bg-latar text-navy" id="tutup-filter" aria-label="Tutup filter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+      </div>
+      <div>
+        <h3>Harga per Bulan</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="rentang-harga">Minimum<input name="harga_min" inputmode="numeric" placeholder="0" autocomplete="off"></label>
+          <label class="rentang-harga">Maksimum<input name="harga_max" inputmode="numeric" placeholder="-" autocomplete="off"></label>
+        </div>
+        <p class="mt-2 mb-0 text-12 font-medium text-merah" id="galat-harga" role="alert" hidden></p>
+        <div class="preset-harga flex flex-wrap gap-1.5 mt-2.5" id="preset-harga">
+          <button type="button" data-min="" data-max="750000" aria-pressed="false">&lt; 750 rb</button>
+          <button type="button" data-min="750000" data-max="1000000" aria-pressed="false">750 rb - 1 jt</button>
+          <button type="button" data-min="1000000" data-max="" aria-pressed="false">&gt; 1 jt</button>
+        </div>
+        <p class="text-12 text-abu mt-2.5 mb-0 leading-[1.4] empty:hidden" id="petunjuk-harga"></p>
+      </div>
+      <div>
+        <h3>Jenis Kos</h3>
+        <label class="cek-filter"><input type="radio" name="tipe_kos" value="" checked> Semua jenis</label>
+        <label class="cek-filter"><input type="radio" name="tipe_kos" value="pria"> Putra</label>
+        <label class="cek-filter"><input type="radio" name="tipe_kos" value="wanita"> Putri</label>
+        <label class="cek-filter"><input type="radio" name="tipe_kos" value="campuran"> Campur</label>
+      </div>
+      <div>
+        <h3>Kecamatan</h3>
+        <div class="urutkan w-full [&>select]:w-full"><select name="kecamatan" id="f-kecamatan"><option value="">Semua kecamatan</option></select></div>
+      </div>
+      <details class="lipat" open>
+        <summary>Fasilitas <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg></summary>
+        <div class="mt-2" id="f-fasilitas"></div>
+        <p class="text-12 text-abu mt-2.5 mb-0 leading-[1.4]">Kos harus punya semua fasilitas yang dicentang.</p>
+      </details>
+      <div>
+        <h3>Ketersediaan</h3>
+        <label class="cek-filter"><input type="checkbox" name="tersedia" value="1"> Hanya yang ada kamar kosong</label>
+        <p class="text-12 text-abu mt-2.5 mb-0 leading-[1.4]">Kamar yang sedang dipesan atau diperbaiki tidak dihitung kosong.</p>
+      </div>
+      <button class="btn-utama hidden max-md:inline-flex shrink-0 sticky -bottom-5 -mx-5 -mb-5 rounded-none h-14 shadow-[0_-8px_16px_rgba(255,255,255,.9)]" type="submit" id="tombol-lihat">Lihat hasil</button>
+    </form>
+    <div class="hidden max-md:block fixed inset-0 z-65 bg-slate-900/45 animate-muncul" id="latar-filter" hidden></div>
+
+    <section class="min-w-0">
+      <div class="filter-aktif" id="filter-aktif"></div>
+      <div class="flex justify-between items-center gap-4 mb-6 max-sm:flex-col max-sm:items-stretch">
+        <div>
+          <h2 class="m-0 text-22" id="jumlah-hasil">Memuat...</h2>
+          <p class="mt-1 mb-0 text-12 text-abu" id="rentang-hasil">di sekitar kampus Malang</p>
+        </div>
+        <div class="kepala-kanan max-sm:justify-between">
+          <button type="button" class="btn-garis hidden max-md:inline-flex" id="btn-filter-hp" aria-controls="panel-filter" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filter <span class="lencana-filter" id="lencana-filter" hidden></span></button>
+          <label class="urutkan">Urutkan
+            <select id="urut">
+              <option value="rating">Rating Tertinggi</option>
+              <option value="terdekat">Terdekat ke Kampus</option>
+              <option value="termurah">Harga Termurah</option>
+              <option value="termahal">Harga Termahal</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="grid-kos tiga" id="grid-kos" aria-live="polite"></div>
+      <nav class="paginasi-situs" id="paginasi" aria-label="Halaman"></nav>
+    </section>
+  </div>
+</main>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/inti/cari-langsung.js"></script>
+<script src="assets/js/halaman/katalog.js"></script>
+</body>
+</html>

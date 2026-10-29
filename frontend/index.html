@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>KosinAja - Cari Kos Dekat Kampus Malang</title>
+  <meta name="description" content="Cari kos mahasiswa dekat kampus Malang: harga transparan, fasilitas lengkap, reservasi online.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="beranda">
+<header id="kepala"></header>
+<main>
+  <section class="bg-white bg-[radial-gradient(ellipse_at_top,#eaf1ff,transparent_70%)] pt-14 pb-12 text-center border-b border-garis">
+    <div class="wadah">
+      <span class="pill-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>Spesialis Kos Sekitar Kampus Malang</span>
+      <h1 class="mt-3 mb-2 text-40 leading-[1.15] tracking-[-.8px] max-sm:text-28">Cari &amp; Temukan Kos Nyaman <span class="text-aksen">Dekat Kampus Impian</span></h1>
+      <p class="mx-auto my-0 max-w-[672px] text-abu text-16 leading-6">Bandingkan harga, fasilitas, dan jarak ke kampus dalam satu tempat. Ajukan sewa langsung ke pemilik tanpa perantara.</p>
+      <form class="kotak-cari max-w-[768px] mx-auto mt-8 mb-4" id="form-cari" action="katalog" role="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="q">Cari kos</label>
+        <input id="q" name="q" type="search" autocomplete="off" placeholder="Cari nama kos, jalan, atau kecamatan (misal: Lowokwaru)"
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="saran-cari">
+        <kbd class="pintas-kbd" title="Tekan / untuk mulai mencari">/</kbd>
+        <button class="btn-utama" type="submit">Cari Kos</button>
+        <div class="saran-cari" id="saran-cari" role="listbox" aria-label="Saran pencarian kos" hidden></div>
+      </form>
+      <div class="pintasan" id="pintasan">
+        <span>Pencarian populer:</span>
+        <a href="katalog?tipe_kos=pria" data-kunci="tipe_kos" data-nilai="pria" aria-pressed="false">Putra</a>
+        <a href="katalog?tipe_kos=wanita" data-kunci="tipe_kos" data-nilai="wanita" aria-pressed="false">Putri</a>
+        <a href="katalog?urut=terdekat" data-kunci="urut" data-nilai="terdekat" aria-pressed="false">Dekat Kampus</a>
+        <a href="katalog?harga_max=1000000" data-kunci="harga_max" data-nilai="1000000" aria-pressed="false">Di bawah 1 Jt</a>
+        <a href="katalog?tersedia=1" data-kunci="tersedia" data-nilai="1" aria-pressed="false">Kamar Kosong</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wadah" id="daftar-kos">
+    <div class="flex justify-between items-end gap-4 mt-10 mb-6 max-md:flex-col max-md:items-start">
+      <div>
+        <h2 class="m-0 text-26">Katalog Kos Pilihan di Sekitar Malang</h2>
+        <p class="mt-1 mb-0 text-abu" id="info-jumlah" aria-live="polite">Memuat kos...</p>
+      </div>
+      <label class="urutkan">Urutkan
+        <select id="urut">
+          <option value="rating">Rating Tertinggi</option>
+          <option value="terdekat">Terdekat ke Kampus</option>
+          <option value="termurah">Harga Termurah</option>
+          <option value="termahal">Harga Termahal</option>
+        </select>
+      </label>
+    </div>
+    <div class="filter-aktif -mt-2 mb-5 empty:hidden" id="filter-aktif"></div>
+    <div class="grid-kos" id="grid-kos" aria-live="polite"></div>
+    <div class="flex justify-center mt-6"><button class="btn-garis" id="muat-lagi" hidden>Muat Lebih Banyak <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button></div>
+  </section>
+</main>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/inti/cari-langsung.js"></script>
+<script src="assets/js/halaman/beranda.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Masuk - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body data-mode="masuk" data-sebagai="penyewa">
+<main class="w-full max-w-[1120px] grid grid-cols-[488px_1fr] bg-white rounded-[32px] p-4 shadow-[0_10px_30px_-5px_rgba(30,41,59,.06)] max-lg:grid-cols-[400px_1fr] max-md:grid-cols-1 max-md:rounded-3xl max-md:p-2">
+  <section class="branding" id="branding"></section>
+
+  <section class="pt-[26px] pr-14 pb-6 pl-18 flex flex-col max-lg:py-6 max-lg:px-8 max-md:pt-6 max-md:px-4 max-md:pb-4">
+    <a href="./" class="merek text-navy max-md:hidden"><span class="merek-lambang bg-aksen text-white"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg></span>KosinAja</a>
+    <div class="my-auto pt-10 pb-6 max-w-[440px] w-full max-md:pt-2">
+      <h1 class="font-judul text-30 leading-[1.25] m-0 max-sm:text-24">Selamat Datang Kembali</h1>
+      <p class="text-abu text-15 mt-2 mb-6 leading-normal">Masuk untuk melihat favorit dan status reservasi kos Anda.</p>
+
+      <form novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <div class="input"><input id="email" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required></div>
+          <p class="galat-field" data-galat="email"></p>
+        </div>
+        <div class="field">
+          <div class="flex justify-between items-center">
+            <label for="password">Kata Sandi</label>
+            <a href="lupa-sandi" class="text-12 font-semibold text-aksen">Lupa password?</a>
+          </div>
+          <div class="input">
+            <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="mata" aria-label="Tampilkan kata sandi"></button>
+          </div>
+          <p class="galat-field" data-galat="password"></p>
+        </div>
+        <button type="submit" class="btn-utama">Masuk</button>
+      </form>
+
+      <p class="flex items-center gap-3 text-abu-muda text-12 mt-[34px] mb-[18px] before:content-[''] before:flex-1 before:h-px before:bg-garis after:content-[''] after:flex-1 after:h-px after:bg-garis">atau masuk dengan</p>
+      <button type="button" class="w-full h-13 rounded-[14px] border border-garis bg-white flex items-center justify-center gap-3 font-semibold text-navy hover:bg-latar" data-segera="Masuk dengan Google belum tersedia.">
+        <span class="font-bold text-[#4285f4] text-16">G</span>Lanjutkan dengan Google
+      </button>
+    </div>
+
+    <p class="kaki">Belum punya akun? <a href="daftar" data-bawa-kembali>Daftar Sekarang</a>
+      <span class="ganti-peran">Pemilik kos? <a href="masuk-pemilik">Masuk sebagai Pemilik</a></span></p>
+  </section>
+</main>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/halaman/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <title>Profil Saya - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/situs.css">
+</head>
+<body data-halaman="akun">
+<header id="kepala"></header>
+<main class="wadah max-w-[1040px]">
+  <p class="jejak"><a href="./">Beranda</a> / Akun Saya / <b>Profil Saya</b></p>
+  <div class="flex items-center gap-4 mb-8">
+    <span class="avatar size-16 text-22" data-akun="inisial">..</span>
+    <div class="min-w-0">
+      <h1 class="m-0 text-32 truncate" data-akun="nama">Profil Saya</h1>
+      <p class="mt-1 mb-0 text-abu text-15 break-all" data-akun="email"></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-6 items-start max-md:grid-cols-1">
+    <form class="bg-white border border-garis rounded-2xl p-7 flex flex-col gap-4 max-sm:p-5" id="form-profil" novalidate>
+      <div>
+        <h2 class="m-0 text-20">Data Diri</h2>
+        <p class="mt-1 mb-0 text-13 text-abu">Nama dan nomor WhatsApp dipakai pemilik kos untuk menghubungimu.</p>
+      </div>
+      <label class="isian">Nama Lengkap
+        <input name="nama_lengkap" maxlength="150" autocomplete="name" required>
+        <span class="galat-field" data-galat="nama_lengkap"></span>
+      </label>
+      <label class="isian">Email
+        <input name="email" type="email" readonly>
+        <small>Email dipakai untuk masuk dan tidak bisa diubah.</small>
+      </label>
+      <label class="isian">Nomor WhatsApp
+        <input name="no_telepon" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="08xx-xxxx-xxxx" required>
+        <span class="galat-field" data-galat="no_telepon"></span>
+      </label>
+      <button class="btn-utama self-start" type="submit">Simpan Perubahan</button>
+    </form>
+
+    <form class="bg-white border border-garis rounded-2xl p-7 flex flex-col gap-4 max-sm:p-5" id="form-sandi" novalidate>
+      <div>
+        <h2 class="m-0 text-20">Ganti Kata Sandi</h2>
+        <p class="mt-1 mb-0 text-13 text-abu">Gunakan minimal 8 karakter yang tidak dipakai di situs lain.</p>
+      </div>
+      <label class="isian">Kata Sandi Lama
+        <input name="password_lama" type="password" autocomplete="current-password" required>
+        <span class="galat-field" data-galat="password_lama"></span>
+      </label>
+      <label class="isian">Kata Sandi Baru
+        <input name="password_baru" type="password" autocomplete="new-password" minlength="8" required>
+        <span class="galat-field" data-galat="password_baru"></span>
+      </label>
+      <label class="isian">Konfirmasi Kata Sandi Baru
+        <input name="konfirmasi" type="password" autocomplete="new-password" required>
+        <span class="galat-field" data-galat="konfirmasi"></span>
+      </label>
+      <button class="btn-utama self-start" type="submit">Ganti Kata Sandi</button>
+    </form>
+  </div>
+</main>
+
+<footer id="kaki"></footer>
+
+<script src="assets/js/inti/api.js"></script>
+<script src="assets/js/inti/situs.js"></script>
+<script src="assets/js/inti/profil.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const akun = await Situs.mulai();
+    if (!akun) return Situs.mintaMasuk('Masuk dulu untuk membuka profil');
+    if (akun.role === 'admin') return location.replace(`${FRONTEND}admin/profil`);
+    pasangProfil(akun, { saatTersimpan: (baru) => renderKepalaSitus(baru) });
+  });
+</script>
+</body>
+</html>
