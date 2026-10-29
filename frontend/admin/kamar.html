@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Kelola Kamar &amp; Unit - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="kamar" data-judul="Kelola Kamar &amp; Unit">
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten" id="konten">
+    <header id="topbar"></header>
+
+    <!-- KPI Metrik Bar / Inventory Health -->
+    <section class="grid grid-cols-4 gap-4 mb-8 max-lg:grid-cols-2 max-sm:grid-cols-1
+                    [&>div]:bg-white [&>div]:rounded-2xl [&>div]:shadow-lembut [&>div]:py-8 [&>div]:px-6 [&>div]:flex [&>div]:items-center [&>div]:justify-between [&>div]:gap-3
+                    [&_.label]:m-0 [&_.label]:whitespace-nowrap [&_.label]:text-12 [&_.label]:leading-4 [&_.label]:font-medium [&_.label]:tracking-[.6px] [&_.label]:text-abu
+                    [&_.nilai]:mt-1 [&_.nilai]:mb-0 [&_.nilai]:flex [&_.nilai]:items-baseline [&_.nilai]:gap-2
+                    [&_b]:font-judul [&_b]:text-32 [&_b]:leading-10 [&_b]:font-bold [&_.nilai_span]:text-12 [&_.nilai_span]:text-abu
+                    [&_.ikon]:size-12 [&_.ikon]:rounded-2xl [&_.ikon]:grid [&_.ikon]:place-items-center [&_.ikon]:shrink-0 [&_.ikon]:drop-shadow-[0_1px_1px_rgba(0,0,0,.05)]">
+      <div>
+        <div><p class="label">TOTAL KAPASITAS</p><p class="nilai"><b class="text-navy" id="kpi-total">0</b><span>Kamar</span></p></div>
+        <span class="ikon bg-biru-terang"><img src="../assets/img/kpi-total.svg" width="19.5" height="19.5" alt=""></span>
+      </div>
+      <div>
+        <div><p class="label">TERISI (AKTIF)</p><p class="nilai"><b class="text-navy" id="kpi-terisi">0</b><span>Kamar</span></p></div>
+        <span class="ikon bg-[#ecfdf5]"><img src="../assets/img/kpi-terisi.svg" width="21.667" height="17.767" alt=""></span>
+      </div>
+      <div>
+        <div><p class="label">BELUM TERISI</p><p class="nilai"><b class="text-aksen" id="kpi-kosong">0</b><span>Kamar</span></p></div>
+        <span class="ikon bg-[#dbe1ff]"><img src="../assets/img/kpi-kosong.svg" width="19.5" height="19.5" alt=""></span>
+      </div>
+      <div>
+        <div><p class="label">PERBAIKAN</p><p class="nilai"><b class="text-oranye-tua" id="kpi-perbaikan">0</b><span>Kamar</span></p></div>
+        <span class="ikon bg-[#fffbeb]"><img src="../assets/img/kpi-perbaikan.svg" width="21.667" height="17.333" alt=""></span>
+      </div>
+    </section>
+
+    <!-- Filter & Control Toolbar -->
+    <section class="kartu flex flex-col gap-4 mb-8 shadow-[0_4px_8px_rgba(30,41,59,.03)]">
+      <div class="flex gap-4 items-center max-sm:flex-col max-sm:items-stretch">
+        <label class="input-cari">
+          <img src="../assets/img/ikon-cari.svg" width="15" height="15" alt="">
+          <input type="search" id="cari" placeholder="Cari no. kamar (A-01), tipe (Deluxe), atau nama penyewa...">
+        </label>
+        <label class="select-biru">
+          <select id="filter-tipe"><option value="">Semua Tipe Kamar</option></select>
+          <img src="../assets/img/ikon-chevron-bawah.svg" width="9" height="5.55" alt="">
+        </label>
+        <a href="tambah-kamar" class="btn-biru text-14 py-2.5 px-5 whitespace-nowrap max-sm:justify-center">+ Tambah Kamar</a>
+      </div>
+      <div class="tab-status" id="tab-status" role="tablist">
+        <button class="aktif" data-status="">Semua Unit <span class="hitung" id="n-semua">0</span></button>
+        <button data-status="Tersedia"><i style="background:#3b82f6"></i>Belum Terisi <span class="hitung biru" id="n-kosong">0</span></button>
+        <button data-status="Terisi"><i style="background:#10b981"></i>Terisi (Aktif) <span class="hitung hijau" id="n-terisi">0</span></button>
+        <button data-status="Perbaikan"><i style="background:#f59e0b"></i>Dalam Perbaikan <span class="hitung kuning" id="n-perbaikan">0</span></button>
+      </div>
+    </section>
+
+    <!-- GRID VIEW: Room Cards Inventory -->
+    <section class="grid-kamar" id="grid-kamar"></section>
+  </main>
+</div>
+
+<!-- Inventaris kamar: barang fisik + jumlah + kondisi (CRUD api/inventaris) -->
+<div class="modal" id="modal-inventaris">
+  <div class="modal-isi sangat-lebar" role="dialog" aria-modal="true" aria-labelledby="judul-inventaris">
+    <div class="flex justify-between items-start gap-4 mb-4">
+      <div>
+        <h3 class="font-judul text-20" id="judul-inventaris">Inventaris Kamar</h3>
+        <p class="m-0 text-13 text-abu">Catat barang fisik di kamar beserta jumlah dan kondisinya. Data ini hanya terlihat oleh Anda.</p>
+      </div>
+      <button type="button" class="btn-ikon size-9" data-tutup aria-label="Tutup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+
+    <form class="grid grid-cols-[2fr_90px_1.4fr_2fr] gap-3 items-start p-4 mb-5 rounded-xl bg-latar max-md:grid-cols-2 max-sm:grid-cols-1
+                 [&_label]:flex [&_label]:flex-col [&_label]:gap-1.5 [&_label]:text-12 [&_label]:font-semibold [&_.input]:min-h-10 [&_.input]:py-2 [&_.input]:px-3"
+          id="form-inventaris" novalidate>
+      <label>Nama Barang <span class="sr-only">(wajib)</span>
+        <input class="input" name="nama_barang" maxlength="100" placeholder="Contoh: Kasur" required>
+        <span class="galat-field font-normal" data-galat="nama_barang"></span>
+      </label>
+      <label>Jumlah
+        <input class="input" name="jumlah" type="number" min="0" max="999" value="1">
+        <span class="galat-field font-normal" data-galat="jumlah"></span>
+      </label>
+      <label>Kondisi
+        <span class="select-putih">
+          <select class="h-10!" name="kondisi">
+            <option>Baik</option><option>Rusak Ringan</option><option>Rusak Berat</option><option>Hilang</option>
+          </select>
+          <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+        </span>
+      </label>
+      <label>Catatan
+        <input class="input" name="catatan" maxlength="255" placeholder="Opsional, misal: retak di sudut">
+      </label>
+      <div class="col-span-full flex gap-2 justify-end">
+        <button type="button" class="btn-abu" id="batal-edit-inventaris" hidden>Batal Ubah</button>
+        <button type="submit" class="btn-biru text-13 py-2 px-4" id="simpan-inventaris">+ Tambah Barang</button>
+      </div>
+    </form>
+
+    <div class="tabel-wrap">
+      <table class="min-w-[560px]">
+        <thead><tr><th>Barang</th><th>Jumlah</th><th>Kondisi</th><th>Catatan</th><th>Aksi</th></tr></thead>
+        <tbody id="isi-inventaris"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/kamar.js"></script>
+</body>
+</html>

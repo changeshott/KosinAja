@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Tambah Kamar - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="tambah-kamar" data-judul="Tambah Kamar" data-gedung>
+<div class="flex min-h-screen max-md:flex-col">
+  <aside id="sidebar"></aside>
+
+  <main class="konten" id="konten">
+    <header id="topbar"></header>
+
+    <form id="form-kamar" novalidate>
+      <!-- Top Navigation & Header Row -->
+      <div class="flex justify-between items-center gap-6 mb-8 max-md:flex-col max-md:items-start">
+        <div>
+          <nav class="flex items-center gap-1 text-12 leading-4 font-medium text-abu [&_a:hover]:text-aksen">
+            <a href="./">Dashboard</a>
+            <img src="../assets/img/ikon-breadcrumb.svg" width="4.317" height="7" alt="">
+            <a href="kamar">Manajemen Kamar</a>
+            <img src="../assets/img/ikon-breadcrumb.svg" width="4.317" height="7" alt="">
+            <span class="text-[#0b1c30] font-semibold" id="crumb-akhir">Tambah Kamar Kos Baru</span>
+          </nav>
+          <h1 class="judul-halaman" id="judul-form">Tambah Kamar &amp; Unit Kos Baru</h1>
+          <p class="sub-halaman">Lengkapi data spesifikasi kamar, fasilitas lengkap, tarif sewa, dan foto unit agar kamar langsung tampil menarik dan akurat di halaman detail pencarian mahasiswa Polinema.</p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <button type="submit" class="btn-draf" data-publish="0">
+            <img src="../assets/img/ikon-draf.svg" width="12" height="13.5" alt="">Simpan sebagai Draf
+          </button>
+          <button type="submit" class="btn-publikasi" data-publish="1">
+            <img src="../assets/img/ikon-roket.svg" width="16.706" height="16.725" alt="">Publikasikan
+          </button>
+        </div>
+      </div>
+
+      <!-- Seksi 1 -->
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-1.svg" width="16.5" height="16.5" alt=""></span>
+          <div><h2>Seksi 1: Informasi Dasar Unit Kamar</h2><p>Nomor unit, tipe penamaan, dan penempatan lantai kos</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="nomor_kamar">Nomor / Nama Kamar <span class="wajib">*</span></label>
+            <input class="input" id="nomor_kamar" name="nomor_kamar" maxlength="20" placeholder="Kamar A-01" required>
+            <small>Gunakan format yang mudah dikenali saat mahasiswa survei.</small>
+            <span class="galat-field" data-galat="nomor_kamar"></span>
+          </div>
+          <div class="field">
+            <label for="tipe_kamar">Tipe Kamar <span class="wajib">*</span></label>
+            <input class="input" id="tipe_kamar" name="tipe_kamar" list="daftar-tipe" maxlength="100" placeholder="Tipe 1" required>
+            <datalist id="daftar-tipe"></datalist>
+            <span class="galat-field" data-galat="tipe_kamar"></span>
+          </div>
+          <div class="field">
+            <label for="lantai">Penempatan Lantai <span class="wajib">*</span></label>
+            <div class="select-putih">
+              <select id="lantai" name="lantai">
+                <option value="0">Lantai Dasar</option>
+                <option value="1" selected>Lantai 1</option><option value="2">Lantai 2</option>
+                <option value="3">Lantai 3</option><option value="4">Lantai 4</option><option value="5">Lantai 5</option>
+              </select>
+              <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+            </div>
+            <span class="galat-field" data-galat="lantai"></span>
+          </div>
+          <div class="field">
+            <span class="label">Status Ketersediaan Awal</span>
+            <div class="flex gap-4 pt-1 text-14 font-medium [&_label]:flex [&_label]:items-center [&_label]:gap-1.5 [&_label]:cursor-pointer">
+              <label><input type="radio" name="status_awal" value="tersedia" checked> Tersedia / Belum Terisi</label>
+              <label><input type="radio" name="status_awal" value="perbaikan"> Dalam Perbaikan</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seksi 2 -->
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-2.svg" width="18.333" height="14.667" alt=""></span>
+          <div><h2>Seksi 2: Spesifikasi Fisik Kamar</h2><p>Detail parameter dimensi dan tata ruang seperti di halaman detail pengguna</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <span class="label">Ukuran Kamar (P x L)</span>
+            <div class="flex gap-2">
+              <label class="input-satuan"><input class="input" type="number" name="panjang_m" step="0.1" min="0.5" placeholder="4" aria-label="Panjang"><span>m</span></label>
+              <label class="input-satuan"><input class="input" type="number" name="lebar_m" step="0.1" min="0.5" placeholder="3" aria-label="Lebar"><span>m</span></label>
+            </div>
+            <span class="flex items-center gap-1 text-12 leading-4 font-medium text-aksen"><img src="../assets/img/ikon-centang-biru.svg" width="10.867" height="8.017" alt=""><span id="info-ukuran">Format display: 3 x 4 Meter (12 m²)</span></span>
+            <span class="galat-field" data-galat="panjang_m"></span><span class="galat-field" data-galat="lebar_m"></span>
+          </div>
+          <div class="field">
+            <label for="tipe_kasur">Tipe Kasur</label>
+            <div class="select-putih">
+              <select id="tipe_kasur" name="tipe_kasur">
+                <option>Single Springbed Comfort</option>
+                <option>Double Springbed</option>
+                <option>Queen Springbed</option>
+                <option>Kasur Busa</option>
+              </select>
+              <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+            </div>
+          </div>
+          <div class="field">
+            <label for="listrik">Kebijakan Listrik</label>
+            <div class="select-putih">
+              <select id="listrik" name="listrik">
+                <option>Gratis / Termasuk Biaya</option>
+                <option>Token Sendiri</option>
+                <option>Bayar Terpisah per Bulan</option>
+              </select>
+              <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+            </div>
+          </div>
+          <div class="field">
+            <label for="ventilasi">Ventilasi &amp; Pencahayaan</label>
+            <div class="select-putih">
+              <select id="ventilasi" name="ventilasi">
+                <option>Jendela Luar</option>
+                <option>Jendela Dalam</option>
+                <option>Exhaust</option>
+              </select>
+              <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+            </div>
+          </div>
+          <div class="field col-span-full">
+            <span class="label">Tipe Kamar Mandi</span>
+            <div class="flex gap-4 pt-1 max-md:flex-col [&_label]:flex-1 [&_label]:flex [&_label]:items-center [&_label]:gap-4 [&_label]:bg-biru-pucat [&_label]:rounded-xl [&_label]:p-4 [&_label]:min-h-[82px] [&_label]:cursor-pointer [&_label]:border [&_label]:border-transparent [&_label]:has-checked:border-aksen/30 [&_input]:size-[17px] [&_input]:shrink-0 [&_b]:block [&_b]:text-14 [&_b]:leading-[18px] [&_b]:font-semibold [&_small]:block">
+              <label><input type="radio" name="kamar_mandi" value="Dalam" checked>
+                <span><b>Kamar Mandi Dalam</b><small>Privasi maksimal, lengkap dengan shower</small></span></label>
+              <label><input type="radio" name="kamar_mandi" value="Luar">
+                <span><b>Kamar Mandi Luar Bersih</b><small>Dibersihkan rutin pengelola setiap hari</small></span></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seksi 3 -->
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-3.svg" width="18.333" height="13.819" alt=""></span>
+          <div><h2>Seksi 3: Fasilitas Kamar &amp; Bersama</h2><p>Checklist interaktif yang matching dengan Seksi Fasilitas di Detail Kamar</p></div>
+        </div>
+        <div id="grup-fasilitas"></div>
+      </section>
+
+      <!-- Seksi 4 -->
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-4.svg" width="20.1667" height="14.6667" alt=""></span>
+          <div><h2>Seksi 4: Skema Tarif Sewa &amp; Biaya Tambahan</h2><p>Perhitungan nominal bulanan, diskon maba Polinema, serta deposit</p></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="harga">Biaya Sewa Bulanan (Rp) <span class="wajib">*</span></label>
+            <label class="relative [&>span]:absolute [&>span]:left-3.5 [&>span]:top-1/2 [&>span]:-translate-y-1/2 [&>span]:text-14 [&>span]:text-abu [&_.input]:pl-10"><span>Rp</span><input class="input" id="harga" name="harga_per_bulan" inputmode="numeric" placeholder="1.400.000" required></label>
+            <small>Nominal Bulanan</small>
+            <span class="galat-field" data-galat="harga_per_bulan"></span>
+          </div>
+          <div class="field">
+            <label for="minimal_sewa_bulan">Opsi Pembayaran Minimum</label>
+            <div class="select-putih">
+              <select id="minimal_sewa_bulan" name="minimal_sewa_bulan">
+                <option value="1">1 Bulan (Fleksibel Bulanan)</option>
+                <option value="3">3 Bulan</option>
+                <option value="6">6 Bulan (Per Semester)</option>
+                <option value="12">12 Bulan (Tahunan)</option>
+              </select>
+              <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seksi 5 -->
+      <section class="seksi">
+        <div class="seksi-kepala">
+          <span class="seksi-ikon"><img src="../assets/img/seksi-5.svg" width="14.6667" height="18.3333" alt=""></span>
+          <div><h2>Seksi 5: Deskripsi Kamar &amp; Ketentuan</h2><p>Narasi daya tarik kamar dan aturan ketertiban hunian</p></div>
+        </div>
+        <div class="field">
+          <label for="deskripsi">Deskripsi Kamar</label>
+          <textarea class="input" id="deskripsi" name="deskripsi_suasana" rows="4" placeholder="Kamar A-01 Deluxe Single dirancang khusus untuk kenyamanan belajar mahasiswa Polinema. Dilengkapi meja belajar luas dengan stop kontak mandiri, sirkulasi udara jendela luar yang sejuk khas Kota Malang, kasur springbed empuk, serta kamar mandi dalam ber-water heater."></textarea>
+          <small>Tips: Sebutkan jarak ke gerbang kampus, suasana tenang malam hari, dan ventilasi.</small>
+        </div>
+        <div class="field">
+          <span class="label">Peraturan &amp; Ketentuan Kamar</span>
+          <div class="grid-cek berlatar" id="cek-peraturan"></div>
+        </div>
+        <div class="field" id="field-peraturan-manual">
+          <label for="peraturan_manual">Peraturan Manual</label>
+          <textarea class="input" id="peraturan_manual" rows="2" placeholder="Contoh: Check-in pukul 14.00 WIB, check-out pukul 11.00 WIB, dan wajib menyalakan lampu kamar saat keluar."></textarea>
+        </div>
+      </section>
+
+      <!-- Seksi 6 -->
+      <section class="seksi">
+        <div class="seksi-kepala antara">
+          <div class="flex items-center gap-4">
+            <span class="seksi-ikon"><img src="../assets/img/seksi-6.svg" width="18.3333" height="18.3333" alt=""></span>
+            <div><h2>Seksi 6: Galeri Foto Kamar &amp; Fasilitas</h2><p>Foto riil beresolusi tinggi meningkatkan konversi reservasi hingga 3.2x</p></div>
+          </div>
+          <span class="pill-jumlah" id="jumlah-foto">0 / 8 Foto Terunggah</span>
+        </div>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="input-foto" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          <span class="dropzone-ikon"><img src="../assets/img/ikon-unggah.svg" width="23.8333" height="17.3333" alt=""></span>
+          <b>Tarik &amp; lepas foto kamar di sini, atau telusuri berkas</b>
+          <small>Mendukung format JPG, PNG, WEBP hingga 2MB per file (Rekomendasi rasio 4:3 atau 16:9).</small>
+          <span class="btn-pilih-foto">Pilih Foto dari Komputer</span>
+        </label>
+        <div class="galeri" id="galeri"></div>
+      </section>
+
+      <div class="kaki-form">
+        <div class="flex gap-2 flex-wrap">
+          <a href="kamar" class="btn-kembali">Kembali</a>
+          <button type="button" class="btn-hapus" id="btn-hapus" hidden>Hapus Kamar</button>
+        </div>
+        <button type="submit" class="btn-publikasi" data-publish="1">
+          <img src="../assets/img/ikon-kirim.svg" width="15.833" height="13.333" alt="">Simpan &amp; Publikasi
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/galeri.js"></script>
+<script src="../assets/js/admin/tambah-kamar.js"></script>
+</body>
+</html>
