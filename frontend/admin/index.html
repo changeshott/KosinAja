@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <title>Dashboard - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body data-halaman="dashboard" data-judul="Dashboard">
+<div class="flex min-h-screen max-md:flex-col">
+
+  <aside id="sidebar"></aside>
+
+  <main class="konten" id="konten">
+    <header id="topbar"></header>
+
+    <!-- Hero -->
+    <section class="kartu relative overflow-hidden flex items-center justify-between gap-6 mb-10 after:content-[''] after:absolute after:-right-[60px] after:-top-[60px] after:size-[280px] after:rounded-full after:bg-biru-pucat [&>*]:relative [&>*]:z-1 max-md:flex-col max-md:items-start">
+      <div>
+        <div class="flex gap-2 mb-3" id="badges"></div>
+        <h1 class="text-26 leading-[1.25] mt-0 mb-1.5 tracking-[-.01em]">Selamat Datang Kembali,<br><span id="sapaan">...</span>!</h1>
+        <div class="flex items-center gap-1.5 text-abu mb-5 [&_svg]:text-biru"><span data-ikon="gedung"></span><span id="hero-alamat">...</span></div>
+        <label class="flex items-center gap-2.5 text-13 text-abu">
+          Properti Aktif:
+          <span class="relative flex items-center gap-2 bg-biru-pucat rounded-[10px] px-3 text-navy [&_svg]:text-biru after:content-[''] after:absolute after:right-3.5 after:top-1/2 after:-mt-0.5 after:border-4 after:border-transparent after:border-t-abu after:pointer-events-none"><span data-ikon="gedung"></span><select class="appearance-none border-0 bg-transparent font-[inherit] font-medium text-navy py-[9px] pr-6 pl-0 cursor-pointer outline-none" id="pilih-kos"></select></span>
+        </label>
+      </div>
+      <a href="tambah-kos" class="inline-flex items-center gap-2.5 bg-coral text-white font-semibold text-15 py-3 px-5 rounded-[10px] shadow-[0_8px_20px_rgba(248,97,107,.3)] hover:bg-[#f04652]"><span data-ikon="rumahPlus"></span>+ Tambah Properti Kos Baru</a>
+    </section>
+
+    <!-- Kartu statistik -->
+    <section class="grid grid-cols-5 gap-4 mb-10 max-xl:grid-cols-3 max-md:grid-cols-2" id="statistik"></section>
+
+    <!-- Ringkasan tipe kamar + rating -->
+    <section class="grid grid-cols-[1fr_296px] gap-6 mb-9 max-xl:grid-cols-1">
+      <div class="kartu">
+        <div class="flex justify-between items-start gap-4 mb-5">
+          <div>
+            <h2 class="text-20 m-0 font-semibold">Ringkasan Tipe Kamar</h2>
+            <p class="mt-0.5 mb-0 text-12 text-abu" id="ringkasan-sub">Sebaran keterisian unit kos per tipe kamar</p>
+          </div>
+          <span class="bg-biru-muda py-1 px-3 rounded-full text-14 whitespace-nowrap" id="periode"></span>
+        </div>
+        <div id="ringkasan"></div>
+      </div>
+      <aside class="rating" id="rating"></aside>
+    </section>
+
+    <!-- Reservasi -->
+    <section class="kartu mb-30">
+      <div class="flex justify-between items-start gap-4 mb-6 max-md:flex-col">
+        <div class="flex gap-3">
+          <span class="size-10 rounded-[10px] bg-kuning-muda text-oranye-tua grid place-items-center" data-ikon="lonceng"></span>
+          <div>
+            <h2 class="m-0 text-20 font-semibold flex items-center gap-2 flex-wrap">Reservasi &amp; Booking Terbaru <span class="badge-oranye" id="badge-menunggu"></span></h2>
+            <p class="mt-0.5 mb-0 text-12 text-abu">Konfirmasi reservasi calon penyewa untuk mengamankan kamar dan tanda jadi (DP)</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <a href="reservasi" class="btn-abu">Filter Status</a>
+          <a href="reservasi" class="btn-abu biru" id="lihat-semua">Lihat Semua</a>
+        </div>
+      </div>
+      <div class="tabel-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Calon Penyewa</th>
+              <th>Kamar Diminati</th>
+              <th>Tgl Masuk &amp;<br>Durasi</th>
+              <th>Total &amp; Status DP</th>
+              <th>Tindakan Respon Cepat</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-reservasi"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Portofolio -->
+    <section>
+      <div class="flex justify-between items-end mb-[18px]">
+        <div>
+          <h2 class="text-20 font-semibold m-0">Portofolio Properti Kos Anda</h2>
+          <p class="mt-0.5 mb-0 text-12 text-abu">Kelola properti kos yang sudah aktif terdaftar atau ekspansi cabang baru di sekitar kampus</p>
+        </div>
+        <span class="text-12 text-abu" id="jumlah-aktif"></span>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(380px,1fr))] gap-6 max-md:grid-cols-1" id="portofolio"></div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/layout.js"></script>
+<script src="../assets/js/admin/dashboard.js"></script>
+</body>
+</html>
