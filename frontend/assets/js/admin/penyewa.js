@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     render();
   });
   document.querySelector('#isi-tabel').addEventListener('click', klikTabel);
-  document.addEventListener('click', (e) => { if (!e.target.closest('.sel-tindakan')) tutupMenu(); });
+  document.addEventListener('click', (e) => { if (!e.target.closest('.sel-tindakan, .menu-tindakan')) tutupMenu(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { tutupMenu(); tutupDetail(); } });
   document.querySelector('#btn-ekspor').addEventListener('click', ekspor);
   document.addEventListener('kos-berganti', () => { saring.kamar = ''; muat(); });
@@ -209,9 +209,25 @@ function bukaMenu(sel, tombol) {
     <button data-aksi="detail" role="menuitem">${SVG_T.mata}Lihat detail</button>
     <button data-aksi="tagihan" role="menuitem">${SVG_T.berkas}Cetak tagihan</button>
     <a href="${esc(linkNotifikasi(p))}" target="_blank" rel="noopener" role="menuitem">${SVG_T.surat}Kirim notifikasi</a>`;
-  sel.appendChild(menu);
-  // Baris paling bawah: buka ke atas supaya tidak terpotong
-  if (menu.getBoundingClientRect().bottom > window.innerHeight - 8) menu.classList.add('ke-atas');
+  menu.addEventListener('click', (e) => {
+    const item = e.target.closest('button[data-aksi]');
+    if (!item) return;
+    e.stopPropagation();
+    const aksi = item.dataset.aksi;
+    tutupMenu();
+    if (aksi === 'detail') bukaDetail(p);
+    if (aksi === 'tagihan') cetakTagihan(p);
+  });
+  document.body.appendChild(menu);
+  // Popup berada di luar area tabel agar tidak terpotong oleh scroll container.
+  const tombolRect = tombol.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+  const kiri = Math.max(8, Math.min(tombolRect.right - menuRect.width, window.innerWidth - menuRect.width - 8));
+  const atas = tombolRect.bottom + menuRect.height + 8 <= window.innerHeight
+    ? tombolRect.bottom + 6
+    : Math.max(8, tombolRect.top - menuRect.height - 6);
+  menu.style.left = `${kiri}px`;
+  menu.style.top = `${atas}px`;
   menu.querySelector('a').addEventListener('click', tutupMenu);
 }
 

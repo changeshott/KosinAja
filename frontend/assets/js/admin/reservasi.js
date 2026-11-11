@@ -74,10 +74,7 @@ function labelBayar(r) {
 function tombolRespon(r) {
   return `
     <button class="btn-setuju" data-aksi="setujui">Setuju</button>
-    <button class="btn-tolak-merah" data-aksi="tolak">Tolak</button>
-    <button class="btn-x" data-aksi="batalkan" title="Batalkan reservasi (misal calon penyewa membatalkan lewat chat)">
-      <img src="../assets/img/ikon-silang.svg" width="10.5" height="10.5" alt="Batalkan">
-    </button>`;
+    <button class="btn-tolak-merah" data-aksi="tolak">Tolak</button>`;
 }
 
 function labelStatus(r) {
