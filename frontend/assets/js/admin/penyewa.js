@@ -179,7 +179,7 @@ function renderPaginasi(jmlHal) {
 
 // ---------- Tindakan per baris ----------
 
-const cariBaris = (id) => semua.find((p) => p.reservasi_id === Number(id));
+const cariBaris = (id) => semua.find((p) => Number(p.reservasi_id) === Number(id));
 
 function klikTabel(e) {
   const tombol = e.target.closest('[data-aksi]');
