@@ -63,20 +63,6 @@ function cari(teks) {
   terapkan();
 }
 
-/** Chip "Dekat Kampus" mengatur urutan; chip lain menyalakan/mematikan filter. */
-function toggleChip(kunci, nilai) {
-  const urut = document.querySelector('#urut');
-  if (kunci === 'urut') {
-    urut.value = urut.value === nilai ? 'rating' : nilai;
-  } else if (filter[kunci] === nilai) {
-    delete filter[kunci];
-  } else {
-    filter[kunci] = nilai; // Putra & Putri sama-sama tipe_kos, jadi otomatis saling menggantikan
-  }
-  syncChip();
-  terapkan();
-}
-
 function hapusFilter(kunci) {
   if (kunci === 'semua') {
     Object.keys(filter).forEach((k) => delete filter[k]);
@@ -145,9 +131,9 @@ function renderChipAktif(chip) {
   const p = parameter();
   document.querySelector('#filter-aktif').innerHTML = chip.length
     ? '<span>Filter aktif:</span>' +
-      chip.map(([k, label]) => `<button type="button" class="chip-filter" data-hapus="${k}" title="Hapus filter ini">${esc(label)} ${SVG_SILANG}</button>`).join('') +
-      '<button type="button" class="btn-reset" data-hapus="semua">Hapus semua</button>' +
-      `<a class="link-katalog" href="katalog?${p}">Filter lengkap di Katalog ${SVG_S.panah}</a>`
+    chip.map(([k, label]) => `<button type="button" class="chip-filter" data-hapus="${k}" title="Hapus filter ini">${esc(label)} ${SVG_SILANG}</button>`).join('') +
+    '<button type="button" class="btn-reset" data-hapus="semua">Hapus semua</button>' +
+    `<a class="link-katalog" href="katalog?${p}">Filter lengkap di Katalog ${SVG_S.panah}</a>`
     : '';
 }
 
