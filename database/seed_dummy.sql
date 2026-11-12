@@ -60,16 +60,6 @@ INSERT INTO fasilitas_kamar (kamar_id, fasilitas_id) VALUES
 (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 8), (6, 9),
 (7, 1), (7, 4);
 
-INSERT INTO inventaris_kamar (kamar_id, nama_barang, jumlah, kondisi, catatan) VALUES
-(1, 'Kasur single',     1, 'Baik', NULL),
-(1, 'Lemari 2 pintu',   1, 'Baik', NULL),
-(1, 'Meja belajar',     1, 'Rusak Ringan', 'Laci macet'),
-(3, 'AC 1/2 PK',        1, 'Baik', 'Servis terakhir Agustus 2026'),
-(3, 'Kasur queen',      1, 'Baik', NULL),
-(3, 'Kursi busa',       1, 'Baik', NULL),
-(5, 'AC 1/2 PK',        1, 'Rusak Ringan', 'Kurang dingin'),
-(5, 'Smart TV 32 inch', 1, 'Baik', NULL);
-
 -- Reservasi: 1 sudah selesai (bisa diulas), 1 disetujui (kamar Terisi), 1 pending (kamar Dipesan)
 INSERT INTO reservasi (pengguna_id, kamar_id, kode_reservasi, tanggal_masuk, durasi_sewa_bulan, total_biaya, status_reservasi) VALUES
 (3, 1, 'KSN-2026-0001', '2026-01-05', 6, 3900000, 'Disetujui'),

@@ -15,8 +15,6 @@ CREATE TYPE tipe_kos_enum AS ENUM ('pria', 'wanita', 'campuran');
 CREATE TYPE status_kamar_enum AS ENUM ('Tersedia', 'Dipesan', 'Terisi', 'Perbaikan');
 -- [v2] + 'Kedaluwarsa' untuk auto-cancel 1x24 jam (Sustainability M06a & Kendala F)
 CREATE TYPE status_reservasi_enum AS ENUM ('Pending', 'Survei', 'Disetujui', 'Ditolak', 'Dibatalkan', 'Kedaluwarsa', 'Selesai');
--- [v2] Kondisi barang inventaris kamar
-CREATE TYPE kondisi_inventaris_enum AS ENUM ('Baik', 'Rusak Ringan', 'Rusak Berat', 'Hilang');
 -- [v2] Fasilitas melekat ke kamar atau ke gedung kos
 CREATE TYPE lingkup_fasilitas_enum AS ENUM ('kamar', 'bersama');
 
@@ -151,21 +149,6 @@ CREATE TABLE fasilitas_kamar (
     PRIMARY KEY (kamar_id, fasilitas_id),
     CONSTRAINT fk_fkamar_kamar FOREIGN KEY (kamar_id) REFERENCES kamar(id) ON DELETE CASCADE,
     CONSTRAINT fk_fkamar_fasilitas FOREIGN KEY (fasilitas_id) REFERENCES fasilitas(id) ON DELETE CASCADE
-);
-
--- Entitas: INVENTARIS_KAMAR [v2]
--- Proposal & Kriteria Keberhasilan menjanjikan CRUD Inventaris (barang + jumlah + kondisi per kamar).
--- Fasilitas = apa yang diiklankan ke penyewa; Inventaris = barang fisik yang dicatat pemilik.
-CREATE TABLE inventaris_kamar (
-    id SERIAL PRIMARY KEY,
-    kamar_id INT NOT NULL,
-    nama_barang VARCHAR(100) NOT NULL,
-    jumlah SMALLINT NOT NULL DEFAULT 1 CHECK (jumlah >= 0),
-    kondisi kondisi_inventaris_enum NOT NULL DEFAULT 'Baik',
-    catatan TEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_inventaris_kamar FOREIGN KEY (kamar_id) REFERENCES kamar(id) ON DELETE CASCADE,
-    CONSTRAINT unique_barang_per_kamar UNIQUE (kamar_id, nama_barang)
 );
 
 -- ==========================================
