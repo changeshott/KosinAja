@@ -139,7 +139,7 @@ class KatalogModel
                    s.google_maps_url, s.deskripsi, s.peraturan_kos, s.created_at,
                    p.nama_lengkap AS pemilik_nama, p.no_telepon AS pemilik_telepon, p.created_at AS pemilik_sejak
               FROM kos s JOIN pengguna p ON p.id = s.pengguna_id
-             WHERE s.id = :id AND s.is_published AND p.status_verifikasi='disetujui' AND p.akun_aktif', ['id' => $kosId])
+             WHERE s.id = :id AND s.is_published AND p.status_verifikasi=\'disetujui\' AND p.akun_aktif', ['id' => $kosId])
             ?? Response::notFound('Kos tidak ditemukan atau belum dipublikasikan');
         $kos = angka($kos, ['latitude', 'longitude']);
         $kos['pemilik_inisial'] = inisial($kos['pemilik_nama']);

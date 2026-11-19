@@ -18,7 +18,7 @@ KosinAja/
 │
 ├── backend/             API JSON (PHP 8.1 + PDO PostgreSQL)
 │   ├── bootstrap.php    di-require semua file api/: config, autoload class, header JSON, error → JSON
-│   ├── config/          config.example.php → salin jadi config.php (password DB)
+│   ├── config/          config.php (buat lokal; isi koneksi PostgreSQL)
 │   ├── core/            kerangka kecil yang dipakai semua fitur
 │   │   ├── DB.php           koneksi + helper query: DB::semua/satu/nilai/insert/update/transaksi
 │   │   ├── Request.php      baca body JSON/form & query string
@@ -51,18 +51,48 @@ Alur satu fitur selalu sama, jadi mudah ditelusuri:
 
 ## Cara menjalankan (Laragon)
 
-1. Buat database `kosinaja` lalu pasang semuanya sekaligus:
+### Instalasi baru
+
+1. Letakkan folder project di `C:\laragon\www\KosinAja`, lalu buka Laragon dan klik **Start All**. Pastikan layanan PostgreSQL dan Apache aktif.
+2. Buka Terminal Laragon (atau PowerShell) di folder project. Jika `psql` belum dikenali, gunakan path penuh Laragon berikut. Ganti `postgresql` dengan nama folder versi PostgreSQL yang ada di `C:\laragon\bin\postgresql` bila berbeda:
+
+   ```powershell
+   cd C:\laragon\www\KosinAja
+   & 'C:\laragon\bin\postgresql\postgresql\bin\psql.exe' -U postgres -c "CREATE DATABASE kosinaja"
+   & 'C:\laragon\bin\postgresql\postgresql\bin\psql.exe' -U postgres -d kosinaja -f database/install.sql
    ```
-   psql -U postgres -c "CREATE DATABASE kosinaja"
-   psql -U postgres -d kosinaja -f database/install.sql
+
+   Masukkan password user PostgreSQL `postgres` saat diminta. `install.sql` memasang skema, migrasi bernomor `001`–`006`, lalu data contoh. Jalankan ini hanya untuk database baru/kosong. Kalau database `kosinaja` sudah ada, jangan buat ulang atau menjalankan `install.sql` di atasnya karena seed bukan proses pembaruan.
+
+   Alternatif memakai HeidiSQL/pgAdmin: buat database `kosinaja`, lalu jalankan `skema.sql`, file `migrasi/001_...sql` sampai `migrasi/006_...sql` berurutan, dan terakhir `seed_dummy.sql`. Jangan jalankan `install.sql` lewat HeidiSQL karena file itu memakai perintah khusus `psql` (`\ir`).
+
+3. Pastikan `backend/config/config.php` ada. File ini tidak disertakan di Git karena berisi password; jika belum ada, buat file tersebut dengan isi berikut dan sesuaikan password serta port dengan PostgreSQL Laragon:
+
+   ```php
+   <?php
+   return [
+       'db' => [
+           'host' => '127.0.0.1',
+           'port' => '5432',
+           'dbname' => 'kosinaja',
+           'user' => 'postgres',
+           'password' => 'PASSWORD_POSTGRES_KAMU',
+       ],
+       'debug' => true,
+       'url_situs' => '',
+       'upload' => [
+           'max_bytes' => 2 * 1024 * 1024,
+           'mime' => ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'],
+       ],
+   ];
    ```
-   Tanpa psql (HeidiSQL / pgAdmin): jalankan `skema.sql`, lalu file di `migrasi/` sesuai nomor, lalu `seed_dummy.sql`.
-   Database lama yang sudah berisi data cukup menjalankan file `migrasi/` yang belum pernah dijalankan.
-2. PHP ≥ 8.1 dengan ekstensi `pdo_pgsql` aktif (Laragon: Menu → PHP → Extensions).
-3. Salin `backend/config/config.example.php` menjadi `config.php`, isi password PostgreSQL.
-4. Taruh folder di `C:\laragon\www` (atau buat link), buka **http://localhost/KosinAja/**.
-   Kalau database dan migrasi sudah beres, Beranda langsung tampil (bisa juga lewat **http://kosinaja.test/**).
-   `http://localhost/KosinAja/?cek=1` selalu menampilkan halaman status.
+
+4. Di Laragon buka **Menu → PHP → Extensions**, aktifkan `pdo_pgsql`, lalu restart Apache jika baru mengubah ekstensi.
+5. Buka **http://localhost/KosinAja/**. Beranda dan katalog publik dapat dibuka tanpa login. URL **http://localhost/KosinAja/?cek=1** menampilkan status koneksi dan migrasi jika ingin memeriksa setup.
+
+### Database yang sudah ada
+
+Jangan jalankan `install.sql` atau `seed_dummy.sql` lagi pada database yang berisi data. Jalankan hanya migrasi yang belum diterapkan, satu per satu sesuai urutan. Untuk database lama yang belum mendapat fitur verifikasi pemilik/super admin, ikuti [`database/PANDUAN_SUPER_ADMIN.md`](database/PANDUAN_SUPER_ADMIN.md), yang menjalankan `database/migrasi/migrasi_super_admin.sql`. Instalasi baru dari `skema.sql` sudah mencakup struktur tersebut, jadi migrasi khusus itu tidak diperlukan.
 
 ## CSS (Tailwind CSS v4)
 
