@@ -187,13 +187,12 @@ const CariLangsung = (() => {
 
   function itemKos(k, q, i) {
     const status = k.kamar_tersedia > 0 ? `${k.kamar_tersedia} kamar kosong` : '<span class="penuh">Penuh</span>';
-    const jarak = k.jarak_kampus_km !== null ? ` · ${k.jarak_kampus_km.toLocaleString('id-ID')} km ke kampus` : '';
     return `
       <div class="saran-item" role="option" id="saran-${k.id}" aria-selected="false" data-aksi="kos" data-href="${FRONTEND}detail-kos?id=${k.id}">
         <img src="${esc(fotoKos(k.foto_utama, i))}" alt="" onerror="${CADANGAN_ONERROR(i)}">
         <div class="saran-teks">
           <b>${sorot(k.nama_kos, q)}</b>
-          <small>${LABEL_TIPE[k.tipe_kos] || k.tipe_kos} · ${sorot(k.alamat, q)}, ${sorot(k.kecamatan, q)}${jarak}</small>
+          <small>${LABEL_TIPE[k.tipe_kos] || k.tipe_kos} · ${sorot(k.alamat, q)}, ${sorot(k.kecamatan, q)}</small>
         </div>
         <div class="saran-kanan"><b>${rupiah(k.harga_mulai)}</b><small>${status}</small></div>
       </div>`;

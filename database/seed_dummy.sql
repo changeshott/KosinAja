@@ -10,10 +10,10 @@ INSERT INTO pengguna (nama_lengkap, email, password, no_telepon, nik, role) VALU
 ('Dewi Lestari',     'dewi@kosinaja.test',          '$2a$10$bQl44gghWy/nYQuzzSA26ulxRF3udgpDD1FH2xn7LDTPNkbRQTx1W', '085700000002', NULL, 'penyewa'),
 ('Rizky Hidayat',    'rizky@kosinaja.test',         '$2a$10$bQl44gghWy/nYQuzzSA26ulxRF3udgpDD1FH2xn7LDTPNkbRQTx1W', '085700000003', NULL, 'penyewa');
 
-INSERT INTO kos (pengguna_id, nama_kos, tipe_kos, alamat, kecamatan, kota, latitude, longitude, jarak_kampus_km, deskripsi, peraturan_kos, is_published) VALUES
-(1, 'Kos Griya Soekarno Hatta', 'pria',     'Jl. Soekarno Hatta Gg. 3 No. 12', 'Lowokwaru', 'Malang', -7.946700, 112.615100, 0.80, 'Kos pria dekat Polinema, akses jalan kaki.', 'Tamu lawan jenis dilarang masuk kamar.', TRUE),
-(1, 'Kos Melati Kembar',        'wanita',   'Jl. Kembang Turi No. 5',          'Lowokwaru', 'Malang', -7.944200, 112.618900, 1.20, 'Kos putri tenang, lingkungan perumahan.', 'Jam malam 22.00.', TRUE),
-(2, 'Kos Sigura-gura Residence','campuran', 'Jl. Sigura-gura No. 30',          'Lowokwaru', 'Malang', -7.955300, 112.611400, 2.50, 'Kos campuran lantai terpisah.', 'Lantai 1 pria, lantai 2 wanita.', FALSE);
+INSERT INTO kos (pengguna_id, nama_kos, tipe_kos, alamat, kecamatan, kota, latitude, longitude, deskripsi, peraturan_kos, is_published) VALUES
+(1, 'Kos Griya Soekarno Hatta', 'pria',     'Jl. Soekarno Hatta Gg. 3 No. 12', 'Lowokwaru', 'Malang', -7.946700, 112.615100, 'Kos pria dekat Polinema, akses jalan kaki.', 'Tamu lawan jenis dilarang masuk kamar.', TRUE),
+(1, 'Kos Melati Kembar',        'wanita',   'Jl. Kembang Turi No. 5',          'Lowokwaru', 'Malang', -7.944200, 112.618900, 'Kos putri tenang, lingkungan perumahan.', 'Jam malam 22.00.', TRUE),
+(2, 'Kos Sigura-gura Residence','campuran', 'Jl. Sigura-gura No. 30',          'Lowokwaru', 'Malang', -7.955300, 112.611400, 'Kos campuran lantai terpisah.', 'Lantai 1 pria, lantai 2 wanita.', FALSE);
 
 INSERT INTO foto_kos (kos_id, url_foto, kategori, is_utama) VALUES
 (1, '/uploads/kos/1-depan.jpg', 'Depan', TRUE),

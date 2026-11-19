@@ -13,4 +13,5 @@
 \ir migrasi/003_pencarian.sql
 \ir migrasi/004_reset_password.sql
 \ir migrasi/005_hapus_inventaris_kamar.sql
+\ir migrasi/006_hapus_jarak_kampus.sql
 \ir seed_dummy.sql

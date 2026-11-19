@@ -114,6 +114,7 @@
             </div>
             <span class="galat-field" data-galat="nama_kos"></span>
           </div>
+
           <div class="field">
             <span class="label">Kategori Penghuni <span class="wajib">*</span></span>
             <div class="pilih-gender grid grid-cols-3 gap-3 max-md:grid-cols-1">
@@ -129,20 +130,65 @@
             </div>
             <span class="galat-field" data-galat="tipe_kos"></span>
           </div>
+
+          <div class="field">
+            <label for="alamat">Alamat Lengkap <span class="wajib">*</span></label>
+            <textarea class="input" id="alamat" name="alamat" rows="3" placeholder="Jl. Soekarno Hatta Gg. 5 No. 12, RT 02 RW 05" required></textarea>
+            <small>Sertakan nama gang, nomor rumah, dan patokan terdekat.</small>
+            <span class="galat-field" data-galat="alamat"></span>
+          </div>
+
           <div class="grid-2">
-            <div class="field">
-              <label for="alamat">Alamat Kos <span class="wajib">*</span></label>
-              <input class="input" id="alamat" name="alamat" placeholder="Jl. Soekarno Hatta Gg. 5 No. 12" required>
-              <span class="galat-field" data-galat="alamat"></span>
-            </div>
             <div class="field">
               <label for="kecamatan">Kecamatan <span class="wajib">*</span></label>
               <input class="input" id="kecamatan" name="kecamatan" list="daftar-kecamatan" placeholder="Lowokwaru" required>
               <datalist id="daftar-kecamatan"><option value="Lowokwaru"><option value="Blimbing"><option value="Klojen"><option value="Sukun"><option value="Kedungkandang"></datalist>
               <span class="galat-field" data-galat="kecamatan"></span>
             </div>
+            <div class="field">
+              <label for="kota">Kota</label>
+              <input class="input" id="kota" name="kota" maxlength="100" value="Malang">
+            </div>
           </div>
-          <label class="flex gap-3 bg-latar rounded-xl p-3.5 text-13 leading-5 text-teks"><input class="mt-1 size-3.5" type="checkbox" id="setuju">
+
+          <div class="field">
+            <label for="google_maps_url">Link Google Maps</label>
+            <input class="input" type="url" id="google_maps_url" name="google_maps_url" placeholder="https://maps.app.goo.gl/...">
+            <small>Buka Google Maps, pilih lokasi kos, lalu Bagikan &gt; Salin link.</small>
+          </div>
+
+          <div class="field">
+            <label for="deskripsi">Deskripsi</label>
+            <textarea class="input" id="deskripsi" name="deskripsi" rows="3" placeholder="Kos tenang 5 menit jalan kaki ke kampus, dekat warung makan dan laundry."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="peraturan_kos">Peraturan Kos</label>
+            <textarea class="input" id="peraturan_kos" name="peraturan_kos" rows="2" placeholder="Satu peraturan per baris, misalnya: Jam malam pukul 22.00 WIB"></textarea>
+          </div>
+
+          <div class="field">
+            <label class="label">Fasilitas Bersama</label>
+            <small class="mb-2">Fasilitas gedung yang dipakai bersama semua penghuni</small>
+            <div class="grid-cek" id="cek-fasilitas"></div>
+          </div>
+
+          <div class="field">
+            <div class="flex justify-between items-center mb-1">
+              <label class="label">Foto Gedung Kos</label>
+              <span class="pill-jumlah" id="jumlah-foto">0 / 8 Foto Terunggah</span>
+            </div>
+            <label class="dropzone" id="dropzone">
+              <input type="file" id="input-foto" accept="image/jpeg,image/png,image/webp" multiple hidden>
+              <span class="dropzone-ikon"><img src="../assets/img/ikon-unggah.svg" width="23.8333" height="17.3333" alt=""></span>
+              <b>Tarik &amp; lepas foto gedung di sini, atau telusuri berkas</b>
+              <small>JPG, PNG, WEBP hingga 2MB per file. Foto pertama jadi foto sampul.</small>
+              <span class="btn-pilih-foto">Pilih Foto dari Komputer</span>
+            </label>
+            <div class="galeri" id="galeri"></div>
+          </div>
+
+          <label class="flex gap-3 bg-latar rounded-xl p-3.5 text-13 leading-5 text-teks mt-2"><input class="mt-1 size-3.5" type="checkbox" id="setuju">
             <span>Saya menyatakan bahwa NIK e-KTP dan data kepemilikan kos yang dimasukkan adalah sah, benar, dan dapat dipertanggungjawabkan sesuai hukum yang berlaku.</span></label>
           <span class="galat-field" data-galat="setuju"></span>
         </div>
@@ -160,6 +206,7 @@
 </div>
 
 <script src="../assets/js/inti/api.js"></script>
+<script src="../assets/js/admin/galeri.js"></script>
 <script src="../assets/js/admin/onboarding.js"></script>
 </body>
 </html>

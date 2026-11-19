@@ -10,7 +10,6 @@ class KosModel
         'kota'            => 'string|max:100',
         'latitude'        => 'numeric',
         'longitude'       => 'numeric',
-        'jarak_kampus_km' => 'numeric|min:0',
         'google_maps_url' => 'string',
         'deskripsi'       => 'string',
         'peraturan_kos'   => 'string',
@@ -53,7 +52,7 @@ class KosModel
 
     public static function find(int $kosId, int $adminId): array
     {
-        $kos = angka(self::pastikanMilik($kosId, $adminId), ['latitude', 'longitude', 'jarak_kampus_km']);
+        $kos = angka(self::pastikanMilik($kosId, $adminId), ['latitude', 'longitude']);
         $kos['foto'] = DB::semua('SELECT id, url_foto, kategori, is_utama FROM foto_kos WHERE kos_id = :id ORDER BY is_utama DESC, id', ['id' => $kosId]);
         $kos['fasilitas'] = DB::semua('
             SELECT f.id, f.nama_fasilitas, f.kategori, f.ikon

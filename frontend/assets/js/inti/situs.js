@@ -165,7 +165,6 @@ function kartuKos(k, i = 0) {
       <div class="kartu-isi">
         <div class="kartu-meta">
           ${rating}
-          ${k.jarak_kampus_km !== null ? `<span class="jarak">${k.jarak_kampus_km.toLocaleString('id-ID')} km ke kampus</span>` : ''}
         </div>
         <h3><a href="${url}">${esc(k.nama_kos)}</a></h3>
         <p class="lokasi">${esc(k.kecamatan)}, ${esc(k.kota)}</p>
