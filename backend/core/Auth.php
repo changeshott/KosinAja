@@ -1,6 +1,7 @@
 <?php
 // Login berbasis session PHP. Frontend dan backend satu origin, jadi cookie PHPSESSID ikut terkirim otomatis oleh fetch().
 //   role 'admin'   = pemilik kos / mitra (panel pengelola)
+//   role 'super_admin' = administrator platform
 //   role 'penyewa' = mahasiswa pencari kos
 class Auth
 {
@@ -31,7 +32,18 @@ class Auth
     /** Wajib login sebagai pemilik kos. Dipakai semua endpoint panel pengelola. */
     public static function adminId(): int
     {
-        return self::wajib('admin', 'Silakan masuk sebagai pemilik kos terlebih dahulu', 'Halaman ini khusus pemilik kos');
+        $id = self::wajib('admin', 'Silakan masuk sebagai pemilik kos terlebih dahulu', 'Halaman ini khusus pemilik kos');
+        $status = DB::satu('SELECT status_verifikasi, akun_aktif FROM pengguna WHERE id = :id', ['id' => $id]);
+        if (!$status || !filter_var($status['akun_aktif'], FILTER_VALIDATE_BOOLEAN) || $status['status_verifikasi'] !== 'disetujui') {
+            self::keluar();
+            Response::error('Akun pemilik belum aktif atau belum disetujui', 403);
+        }
+        return $id;
+    }
+
+    public static function superAdminId(): int
+    {
+        return self::wajib('super_admin', 'Silakan masuk sebagai administrator', 'Halaman ini khusus super admin');
     }
 
     /** Wajib login sebagai penyewa (reservasi, favorit, ulasan). */

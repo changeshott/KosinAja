@@ -36,7 +36,7 @@ class KatalogModel
      */
     public static function list(array $f, ?int $penggunaId): array
     {
-        $where = ['s.is_published', 'k.is_published'];
+        $where = ['s.is_published', 'k.is_published', "p.status_verifikasi = 'disetujui'", 'p.akun_aktif'];
         $p = [];
         if (!empty($f['q'])) {
             // Setiap kata harus cocok ke nama/alamat/kecamatan/kota: persis (ILIKE) atau mirip (pg_trgm)
@@ -100,6 +100,7 @@ class KatalogModel
                    $favorit AS is_favorit
               FROM kos s
               JOIN kamar k ON k.kos_id = s.id
+              JOIN pengguna p ON p.id = s.pengguna_id
               LEFT JOIN (" . KosModel::SQL_RATING . ') r ON r.kos_id = s.id
              WHERE ' . implode(' AND ', $where) . '
              GROUP BY s.id, r.rating_rata, r.jumlah_ulasan' . ($having ? ' HAVING ' . implode(' AND ', $having) : '');
@@ -125,7 +126,7 @@ class KatalogModel
     public static function opsiFilter(): array
     {
         return [
-            'kecamatan' => DB::kolom('SELECT DISTINCT kecamatan FROM kos WHERE is_published ORDER BY kecamatan'),
+            'kecamatan' => DB::kolom("SELECT DISTINCT s.kecamatan FROM kos s JOIN pengguna p ON p.id=s.pengguna_id WHERE s.is_published AND p.status_verifikasi='disetujui' AND p.akun_aktif ORDER BY s.kecamatan"),
             'harga'     => angka(DB::satu('SELECT MIN(harga_per_bulan) AS min, MAX(harga_per_bulan) AS max FROM v_katalog_kamar'), ['min', 'max']),
             'fasilitas' => FasilitasModel::list(null),
         ];
@@ -139,7 +140,7 @@ class KatalogModel
                    s.jarak_kampus_km, s.google_maps_url, s.deskripsi, s.peraturan_kos, s.created_at,
                    p.nama_lengkap AS pemilik_nama, p.no_telepon AS pemilik_telepon, p.created_at AS pemilik_sejak
               FROM kos s JOIN pengguna p ON p.id = s.pengguna_id
-             WHERE s.id = :id AND s.is_published', ['id' => $kosId])
+             WHERE s.id = :id AND s.is_published AND p.status_verifikasi='disetujui' AND p.akun_aktif', ['id' => $kosId])
             ?? Response::notFound('Kos tidak ditemukan atau belum dipublikasikan');
         $kos = angka($kos, ['latitude', 'longitude', 'jarak_kampus_km']);
         $kos['pemilik_inisial'] = inisial($kos['pemilik_nama']);

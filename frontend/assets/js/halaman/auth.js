@@ -28,6 +28,14 @@ const BRANDING = {
     tagline: 'Kelola kamar, penyewa, dan reservasi dalam satu tempat.',
     deskripsi: 'Pantau kamar kosong, setujui pengajuan sewa, dan hubungi calon penyewa lewat WhatsApp tanpa ribet.',
   },
+  super_admin: {
+    lencana: [SVG.perisai, 'Super Admin'],
+    chipKanan: [SVG.gedung, 'Manajemen Platform'],
+    chipKiri: [SVG.kunci, 'Akses Terbatas'],
+    pengantar: 'ADMINISTRASI PLATFORM KOSINAJA',
+    tagline: 'Pantau verifikasi pemilik dan data mitra dari satu tempat.',
+    deskripsi: 'Akses ini hanya tersedia untuk akun administrator yang dibuat melalui database.',
+  },
 };
 
 const mode = document.body.dataset.mode;
@@ -58,7 +66,7 @@ function renderBranding() {
 function tujuanSetelahMasuk(akun) {
   const kembali = new URLSearchParams(location.search).get('kembali');
   if (kembali && kembali.startsWith('/') && !kembali.startsWith('//')) return kembali;
-  return akun.role === 'admin' ? `${FRONTEND}admin/` : `${FRONTEND}`;
+  return akun.role === 'super_admin' ? `${FRONTEND}super-admin/` : (akun.role === 'admin' ? `${FRONTEND}admin/` : `${FRONTEND}`);
 }
 
 function pasangMata() {
@@ -81,6 +89,11 @@ function cekDaftar(data) {
   if (data.password !== data.konfirmasi) e.konfirmasi = 'Konfirmasi kata sandi tidak sama';
   if (sebagai === 'admin' && !/^[0-9]{16}$/.test(data.nik || '')) e.nik = 'NIK wajib 16 digit angka';
   if (sebagai === 'admin' && !data.setuju) e.setuju = 'Centang persetujuan terlebih dahulu';
+  if (sebagai === 'admin') {
+    ['alamat_domisili', 'nama_kos', 'tipe_kos', 'alamat_kos', 'kecamatan', 'kota'].forEach((field) => {
+      if (!String(data[field] || '').trim()) e[field] = 'Wajib diisi';
+    });
+  }
   return e;
 }
 
@@ -144,6 +157,11 @@ async function kirim(e) {
   try {
     const { konfirmasi, setuju, ...body } = data;
     const akun = await api(`auth?aksi=${mode}`, { method: 'POST', body: { ...body, sebagai } });
+    if (mode === 'daftar' && sebagai === 'admin') {
+      toast('Pendaftaran berhasil. Menunggu verifikasi administrator.');
+      setTimeout(() => { location.href = `${FRONTEND}masuk-pemilik`; }, 1400);
+      return;
+    }
     toast(mode === 'masuk' ? `Selamat datang, ${akun.nama_lengkap}` : 'Akun berhasil dibuat');
     location.href = tujuanSetelahMasuk(akun);
   } catch (err) {

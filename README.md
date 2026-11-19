@@ -105,6 +105,7 @@ npm run dev        # build ulang otomatis setiap HTML/JS/CSS disimpan
 | Bantuan, Tentang Kami | `/bantuan`, `/tentang` | – |
 | Masuk / Daftar penyewa | `/masuk`, `/daftar` (`?kembali=/path` setelah login) | – |
 | Masuk / Daftar mitra | `/masuk-pemilik`, `/daftar-mitra` | – |
+| Masuk Super Admin | `/masuk-super-admin` | super admin (akun dibuat manual) |
 | Lupa / Atur kata sandi | `/lupa-sandi`, `/atur-sandi?token=` (tautan dari email) | – |
 | Onboarding pemilik baru | `/admin/onboarding` | pemilik |
 | Dashboard | `/admin/` | pemilik |
@@ -115,6 +116,9 @@ npm run dev        # build ulang otomatis setiap HTML/JS/CSS disimpan
 | Kelola Penyewa | `/admin/penyewa` (`?kamar_id=`) | pemilik |
 | Ulasan Penghuni | `/admin/ulasan` | pemilik |
 | Profil Saya (data pemilik & ganti kata sandi) | `/admin/profil` | pemilik |
+| Konfirmasi & data pemilik | `/super-admin/`, `/super-admin/pemilik` | super admin |
+
+Penyiapan Super Admin dan migrasi database instalasi lama: lihat [`database/PANDUAN_SUPER_ADMIN.md`](database/PANDUAN_SUPER_ADMIN.md).
 
 ### Pencarian di Beranda & Katalog
 

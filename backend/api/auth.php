@@ -1,7 +1,7 @@
 <?php
 // Akun & login (penyewa dan pemilik).
 // GET  /api/auth                  pengguna yang sedang login (null kalau belum); pemilik dapat nik_samar
-// POST /api/auth?aksi=masuk       body {email, password, sebagai: penyewa|admin}
+// POST /api/auth?aksi=masuk       body {email, password, sebagai: penyewa|admin|super_admin}
 // POST /api/auth?aksi=daftar      body {nama_lengkap, email, no_telepon, password, sebagai, nik (wajib untuk admin)}
 // POST /api/auth?aksi=keluar
 // POST /api/auth?aksi=lupa        body {email}             kirim tautan reset (lihat backend/storage/email.log)
@@ -44,19 +44,48 @@ switch (match (Request::method()) { 'GET' => 'GET', 'PUT' => $aksi === 'sandi' ?
             Response::error('Email atau password salah', 401);
         }
         if ($p['role'] !== sebagai($body)) {
-            Response::error($p['role'] === 'admin'
-                ? 'Akun ini terdaftar sebagai pemilik kos. Masuk lewat halaman Login Pemilik.'
-                : 'Akun ini terdaftar sebagai penyewa. Masuk lewat halaman Login penyewa.', 403);
+            $pesan = match ($p['role']) {
+                'admin' => 'Akun ini terdaftar sebagai pemilik kos. Masuk lewat halaman Login Pemilik.',
+                'super_admin' => 'Akun ini khusus administrator. Gunakan halaman login super admin.',
+                default => 'Akun ini terdaftar sebagai penyewa. Masuk lewat halaman Login penyewa.',
+            };
+            Response::error($pesan, 403);
+        }
+        if ($p['role'] === 'admin' && $p['status_verifikasi'] !== 'disetujui') {
+            Response::error($p['status_verifikasi'] === 'ditolak'
+                ? 'Pengajuan pemilik ditolak. Hubungi administrator untuk informasi lebih lanjut.'
+                : 'Akun pemilik masih menunggu verifikasi administrator.', 403);
+        }
+        if (in_array($p['akun_aktif'] ?? true, [false, 0, '0', 'f', 'false'], true)) {
+            Response::error('Akun dinonaktifkan. Hubungi administrator.', 403);
         }
         Auth::masuk($p);
         Response::ok(Auth::user(), 'Berhasil masuk');
 
     case 'POST daftar':
-        $data = Validator::validate($body, PenggunaModel::RULES_DAFTAR);
+        if (($body['sebagai'] ?? '') === 'super_admin') {
+            Response::error('Akun super admin hanya dapat dibuat melalui database.', 403);
+        }
+        $rules = PenggunaModel::RULES_DAFTAR;
+        if (sebagai($body) === 'admin') {
+            $rules += [
+                'alamat_domisili' => 'required|string|max:500',
+                'nama_kos' => 'required|string|max:150',
+                'tipe_kos' => 'required|in:pria,wanita,campuran',
+                'alamat_kos' => 'required|string|max:500',
+                'kecamatan' => 'required|string|max:100',
+                'kota' => 'required|string|max:100',
+            ];
+        }
+        $data = Validator::validate($body, $rules);
         if (PenggunaModel::cariEmail($data['email'])) {
             Response::invalid(['email' => 'Email sudah terdaftar']);
         }
-        Auth::masuk(PenggunaModel::daftar($data, sebagai($body)));
+        $akun = PenggunaModel::daftar($data, sebagai($body));
+        if ($akun['role'] === 'admin') {
+            Response::created(['menunggu_verifikasi' => true], 'Pendaftaran berhasil. Akun Anda menunggu verifikasi administrator.');
+        }
+        Auth::masuk($akun);
         Response::created(Auth::user(), 'Akun berhasil dibuat');
 
     case 'POST keluar':
@@ -83,5 +112,5 @@ Request::method() === 'POST' ? Response::error('Aksi: masuk, daftar, keluar, lup
 
 function sebagai(array $body): string
 {
-    return ($body['sebagai'] ?? 'penyewa') === 'admin' ? 'admin' : 'penyewa';
+    return in_array(($body['sebagai'] ?? 'penyewa'), ['admin', 'super_admin'], true) ? $body['sebagai'] : 'penyewa';
 }

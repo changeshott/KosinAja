@@ -47,6 +47,7 @@ RewriteRule ^(?:frontend/)?(.*/)?index\.html$ %{ENV:BASE}$1 [R=301,L]
 RewriteRule ^(?:frontend/)?(.+)\.html$ %{ENV:BASE}$1 [R=301,L]
 RewriteRule ^frontend/(.*)$ %{ENV:BASE}$1 [R=301,L]
 RewriteRule ^admin$ %{ENV:BASE}admin/ [R=301,L]
+RewriteRule ^super-admin$ %{ENV:BASE}super-admin/ [R=301,L]
 
 RewriteRule ^favicon\.ico$ frontend/assets/img/favicon.svg [L]
 
@@ -55,6 +56,8 @@ RewriteRule ^api/([a-z-]+)/?$ backend/api/$1.php [QSA,L]
 RewriteRule ^uploads/(.+)$ backend/uploads/$1 [L]
 
 # --- Panel pemilik ---
+RewriteRule ^super-admin/$ frontend/super-admin/index.html [L]
+RewriteRule ^super-admin/([a-z-]+)$ frontend/super-admin/$1.html [L]
 RewriteRule ^admin/$ frontend/admin/index.html [L]
 RewriteRule ^admin/([a-z-]+)$ frontend/admin/$1.html [L]
 

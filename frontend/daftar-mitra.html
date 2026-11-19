@@ -17,7 +17,7 @@
     <a href="./" class="merek text-navy max-md:hidden"><span class="merek-lambang bg-aksen text-white"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3z"/></svg></span>KosinAja</a>
     <div class="my-auto pt-6 pb-6 max-w-[543px] w-full max-md:pt-2">
       <h1 class="font-judul text-30 leading-[1.25] m-0 max-sm:text-24">Daftar sebagai Mitra</h1>
-      <p class="text-abu text-15 mt-2 mb-6 leading-normal">Buat akun pemilik untuk mengiklankan kos dan menerima pengajuan sewa.</p>
+      <p class="text-abu text-15 mt-2 mb-6 leading-normal">Ajukan akun pemilik untuk diverifikasi sebelum mengelola dan menampilkan kos.</p>
       <form novalidate>
         <div class="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
           <div class="field">
@@ -36,6 +36,21 @@
           <div class="input"><input id="nik" name="nik" inputmode="numeric" maxlength="16" placeholder="16 digit sesuai KTP" required></div>
           <p class="panduan">Dipakai untuk verifikasi pemilik, tidak ditampilkan ke penyewa.</p>
           <p class="galat-field" data-galat="nik"></p>
+        </div>
+        <div class="field">
+          <label for="alamat_domisili">Alamat Domisili</label>
+          <div class="input"><input id="alamat_domisili" name="alamat_domisili" placeholder="Alamat sesuai identitas" required></div>
+          <p class="galat-field" data-galat="alamat_domisili"></p>
+        </div>
+        <div class="mt-3 mb-2 text-13 font-semibold text-navy">Informasi Kost yang Diajukan</div>
+        <div class="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
+          <div class="field"><label for="nama_kos">Nama Kost</label><div class="input"><input id="nama_kos" name="nama_kos" placeholder="Contoh: Kost Melati" required></div><p class="galat-field" data-galat="nama_kos"></p></div>
+          <div class="field"><label for="tipe_kos">Tipe Kost</label><div class="input"><select id="tipe_kos" name="tipe_kos" required><option value="">Pilih tipe</option><option value="pria">Putra</option><option value="wanita">Putri</option><option value="campuran">Campuran</option></select></div><p class="galat-field" data-galat="tipe_kos"></p></div>
+        </div>
+        <div class="field"><label for="alamat_kos">Alamat Kost</label><div class="input"><input id="alamat_kos" name="alamat_kos" placeholder="Jalan dan nomor bangunan" required></div><p class="galat-field" data-galat="alamat_kos"></p></div>
+        <div class="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
+          <div class="field"><label for="kecamatan">Kecamatan</label><div class="input"><input id="kecamatan" name="kecamatan" required></div><p class="galat-field" data-galat="kecamatan"></p></div>
+          <div class="field"><label for="kota">Kota</label><div class="input"><input id="kota" name="kota" placeholder="Malang" required></div><p class="galat-field" data-galat="kota"></p></div>
         </div>
         <div class="field">
           <label for="email">Email</label>

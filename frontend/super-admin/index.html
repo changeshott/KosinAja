@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="id"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg"><title>Konfirmasi Pemilik - KosinAja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/super-admin.css">
+</head><body data-page="konfirmasi">
+<div class="sa-layout"><aside class="sa-side"><a class="sa-brand" href="./"><span>⌂</span><b>KosinAja<small>SUPER ADMIN</small></b></a><small class="sa-menu-title">MENU SUPER ADMIN</small><nav><a class="active" href="./">Konfirmasi pemilik <i id="badge-menunggu">0</i></a><a href="pemilik">Data pemilik kost</a></nav><a class="sa-logout" href="../">●　Beranda <small>Keluar</small></a></aside>
+<main class="sa-main"><header class="sa-top"><span class="sa-crumb">Konfirmasi pemilik</span><div class="sa-user"><span id="nama-admin">Administrator</span><small>Super admin</small></div><span class="sa-shield">◆</span></header>
+<section class="sa-content"><p class="eyebrow">MANAJEMEN PEMILIK</p><h1>Konfirmasi pemilik kost</h1><p class="sa-sub">Tinjau pengajuan dan pastikan setiap pemilik kost terverifikasi.</p>
+<section class="sa-stats"><article><small>Menunggu konfirmasi</small><b id="stat-menunggu">0</b><i class="amber"></i></article><article><small>Disetujui bulan ini</small><b id="stat-aktif">0</b><i></i></article><article><small>Ditolak bulan ini</small><b id="stat-ditolak">0</b><i class="red"></i></article></section>
+<section class="sa-work"><article class="sa-card sa-queue"><div class="card-head"><div><b>Pengajuan pemilik</b></div><span class="tag amber-tag" id="tag-menunggu">0 menunggu</span></div><div class="sa-tabs"><button data-status="menunggu" class="selected">Menunggu</button><button data-status="disetujui">Disetujui</button><button data-status="ditolak">Ditolak</button></div><div class="sa-search"><span>⌕</span><input id="cari" placeholder="Cari nama atau email pemilik..."></div><div class="table-wrap"><table><thead><tr><th>PEMILIK KOST</th><th>NAMA KOST</th><th>DIAJUKAN</th><th>STATUS</th><th></th></tr></thead><tbody id="daftar"></tbody></table></div><footer class="sa-paging"><span id="paging-label"></span><div><button id="prev">‹</button><span id="page-num">1</span><button id="next">›</button></div></footer></article>
+<article class="sa-card sa-detail" id="detail"><div class="empty-detail">Pilih pengajuan untuk melihat detail pemilik.</div></article></section>
+<p class="sa-note">ⓘ Persetujuan akan mengaktifkan akses pemilik untuk mengelola kos.</p></section></main></div>
+<script src="../assets/js/inti/api.js"></script><script src="../assets/js/super-admin/panel.js"></script></body></html>

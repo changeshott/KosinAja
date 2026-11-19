@@ -50,17 +50,29 @@ class PenggunaModel
         if ($errors) {
             Response::invalid($errors);
         }
-        return DB::satu('
-            INSERT INTO pengguna (nama_lengkap, email, password, no_telepon, nik, role)
-            VALUES (:nama, LOWER(:email), :password, :telp, :nik, :role::role_pengguna)
-            RETURNING ' . self::KOLOM_SESI, [
-            'nama'     => $data['nama_lengkap'],
-            'email'    => $data['email'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-            'telp'     => $telp,
-            'nik'      => $role === 'admin' ? $data['nik'] : null,
-            'role'     => $role,
-        ]);
+        return DB::transaksi(function () use ($data, $role, $telp) {
+            $akun = DB::satu('
+                INSERT INTO pengguna (nama_lengkap, email, password, no_telepon, nik, role, status_verifikasi)
+                VALUES (:nama, LOWER(:email), :password, :telp, :nik, :role::role_pengguna, :status)
+                RETURNING ' . self::KOLOM_SESI, [
+                'nama'     => $data['nama_lengkap'],
+                'email'    => $data['email'],
+                'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+                'telp'     => $telp,
+                'nik'      => $role === 'admin' ? $data['nik'] : null,
+                'role'     => $role,
+                'status'   => $role === 'admin' ? 'menunggu' : 'disetujui',
+            ]);
+            if ($role === 'admin') {
+                DB::query('INSERT INTO pengajuan_pemilik (pengguna_id,alamat_domisili,nama_kos,tipe_kos,alamat_kos,kecamatan,kota)
+                    VALUES (:id,:domisili,:nama_kos,:tipe,:alamat_kos,:kecamatan,:kota)', [
+                    'id' => $akun['id'], 'domisili' => $data['alamat_domisili'], 'nama_kos' => $data['nama_kos'],
+                    'tipe' => $data['tipe_kos'], 'alamat_kos' => $data['alamat_kos'],
+                    'kecamatan' => $data['kecamatan'], 'kota' => $data['kota'],
+                ]);
+            }
+            return $akun;
+        });
     }
 
     /** Ubah nama & nomor WhatsApp sendiri (onboarding & halaman Profil). Email dan NIK tidak bisa diubah. */
