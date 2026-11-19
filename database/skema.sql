@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 -- ==========================================
 -- 1. PEMBUATAN TIPE DATA ENUM
 -- ==========================================
-CREATE TYPE role_pengguna AS ENUM ('penyewa', 'admin');
+CREATE TYPE role_pengguna AS ENUM ('penyewa', 'admin', 'super_admin');
 CREATE TYPE tipe_kos_enum AS ENUM ('pria', 'wanita', 'campuran');
 CREATE TYPE status_kamar_enum AS ENUM ('Tersedia', 'Dipesan', 'Terisi', 'Perbaikan');
 -- [v2] + 'Kedaluwarsa' untuk auto-cancel 1x24 jam (Sustainability M06a & Kendala F)
@@ -31,12 +31,30 @@ CREATE TABLE pengguna (
     no_telepon VARCHAR(20) NOT NULL, -- Dipakai untuk tombol "Hubungi via WhatsApp"
     nik VARCHAR(16) UNIQUE, -- Boleh NULL untuk penyewa
     role role_pengguna NOT NULL DEFAULT 'penyewa',
+    status_verifikasi VARCHAR(20) NOT NULL DEFAULT 'disetujui' CHECK (status_verifikasi IN ('menunggu', 'disetujui', 'ditolak')),
+    akun_aktif BOOLEAN NOT NULL DEFAULT TRUE,
+    alasan_verifikasi TEXT,
+    diverifikasi_oleh INT REFERENCES pengguna(id) ON DELETE SET NULL,
+    diverifikasi_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- [v2] NIK harus tepat 16 digit angka
     CONSTRAINT chk_nik_format CHECK (nik IS NULL OR nik ~ '^[0-9]{16}$'),
     -- [v2] Kriteria Keberhasilan no. 11: Admin/Pemilik wajib punya NIK
-    CONSTRAINT chk_admin_wajib_nik CHECK (role <> 'admin' OR nik IS NOT NULL)
+    CONSTRAINT chk_admin_wajib_nik CHECK (role <> 'admin' OR nik IS NOT NULL),
+    CONSTRAINT chk_pemilik_status CHECK (role = 'admin' OR status_verifikasi = 'disetujui')
+);
+
+-- Data pengajuan awal pemilik diisi saat pendaftaran dan dipakai untuk pemeriksaan admin.
+CREATE TABLE pengajuan_pemilik (
+    pengguna_id INT PRIMARY KEY REFERENCES pengguna(id) ON DELETE CASCADE,
+    alamat_domisili TEXT NOT NULL,
+    nama_kos VARCHAR(150) NOT NULL,
+    tipe_kos tipe_kos_enum NOT NULL,
+    alamat_kos TEXT NOT NULL,
+    kecamatan VARCHAR(100) NOT NULL,
+    kota VARCHAR(100) NOT NULL DEFAULT 'Malang',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Entitas: FASILITAS (master)
@@ -64,6 +82,7 @@ CREATE TABLE kos (
     kota VARCHAR(100) NOT NULL DEFAULT 'Malang',
     latitude NUMERIC(9, 6),
     longitude NUMERIC(9, 6),
+    jarak_kampus_km NUMERIC(5, 2) CHECK (jarak_kampus_km >= 0), -- [v2] satuan dikunci ke km
     google_maps_url TEXT,
     deskripsi TEXT,
     peraturan_kos TEXT,
@@ -261,8 +280,9 @@ FOR EACH ROW EXECUTE FUNCTION fn_sinkron_status_kamar();
 CREATE OR REPLACE FUNCTION fn_validasi_reservasi_baru() RETURNS TRIGGER AS $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM kamar k JOIN kos s ON s.id = k.kos_id
+        SELECT 1 FROM kamar k JOIN kos s ON s.id = k.kos_id JOIN pengguna p ON p.id = s.pengguna_id
          WHERE k.id = NEW.kamar_id AND k.is_published AND s.is_published AND k.status <> 'Perbaikan'
+           AND p.status_verifikasi = 'disetujui' AND p.akun_aktif
     ) THEN
         RAISE EXCEPTION 'Kamar % tidak dapat direservasi (draft atau sedang perbaikan)', NEW.kamar_id;
     END IF;
@@ -321,11 +341,13 @@ SELECT k.id AS kamar_id,
        s.tipe_kos,
        s.kecamatan,
        s.kota,
+       s.jarak_kampus_km,
        (SELECT url_foto FROM foto_kos f WHERE f.kos_id = s.id AND f.is_utama) AS foto_utama,
        r.rating_rata,
        COALESCE(r.jumlah_ulasan, 0) AS jumlah_ulasan
   FROM kamar k
   JOIN kos s ON s.id = k.kos_id
+  JOIN pengguna p ON p.id = s.pengguna_id
   LEFT JOIN (
         SELECT km.kos_id, ROUND(AVG(u.rating), 1) AS rating_rata, COUNT(*) AS jumlah_ulasan
           FROM ulasan u
@@ -333,7 +355,7 @@ SELECT k.id AS kamar_id,
           JOIN kamar km ON km.id = rv.kamar_id
          GROUP BY km.kos_id
        ) r ON r.kos_id = s.id
- WHERE k.is_published AND s.is_published;
+ WHERE k.is_published AND s.is_published AND p.status_verifikasi = 'disetujui' AND p.akun_aktif;
 
 -- Ringkasan dashboard pemilik (Fitur Admin: Dashboard Statistik)
 CREATE VIEW v_statistik_pemilik AS
