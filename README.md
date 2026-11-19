@@ -34,9 +34,9 @@ KosinAja/
 └── frontend/
     ├── *.html           halaman publik & penyewa (URL /nama-file tanpa .html)
     ├── admin/*.html     panel pemilik kos (URL /admin/nama-file); hanya HTML
-    ├── tailwind/        SUMBER CSS: situs.css, auth.css, admin.css (+ watch.js untuk npm run dev)
+    ├── tailwind/        SUMBER CSS: situs.css, auth.css, admin.css, super-admin.css (+ watch.js)
     └── assets/
-        ├── css/         HASIL BUILD Tailwind (situs.css, auth.css, admin.css), jangan diedit langsung
+        ├── css/         HASIL BUILD Tailwind (situs.css, auth.css, admin.css, super-admin.css), jangan diedit langsung
         ├── img/
         └── js/
             ├── inti/    dipakai banyak halaman: api.js (fetch + helper), situs.js (header/kartu kos),
@@ -97,12 +97,12 @@ Jangan jalankan `install.sql` atau `seed_dummy.sql` lagi pada database yang beri
 ## CSS (Tailwind CSS v4)
 
 Semua tampilan memakai Tailwind CSS v4 lewat Tailwind CLI. Hasil build (`assets/css/situs.css`,
-`assets/css/auth.css`, `assets/css/admin.css`) **ikut di-commit**, jadi untuk sekadar menjalankan aplikasi
+`assets/css/auth.css`, `assets/css/admin.css`, `assets/css/super-admin.css`) **ikut di-commit**, jadi untuk sekadar menjalankan aplikasi
 tidak perlu Node.js. Node.js hanya dibutuhkan kalau mengubah class atau file di `frontend/tailwind/`:
 
 ```
 npm install        # sekali saja
-npm run build      # build ketiga file CSS (minify)
+npm run build      # build keempat bundle CSS (minify)
 npm run dev        # build ulang otomatis setiap HTML/JS/CSS disimpan
 ```
 
@@ -111,7 +111,7 @@ npm run dev        # build ulang otomatis setiap HTML/JS/CSS disimpan
   didefinisikan di `@layer components` dengan `@apply` di `frontend/tailwind/*.css`.
 - Token desain (warna `aksen`, `navy`, `abu`, ukuran huruf `text-13` = 13px, dll.) ada di blok `@theme`.
 - Breakpoint memakai varian `max-*`: `max-sm` (HP), `max-md` (tablet), `max-lg`/`max-xl` (laptop kecil).
-- Setiap bundle hanya memindai file miliknya (`@source`), jadi class baru di HTML/JS harus di-build ulang.
+- Setiap bundle hanya memindai file miliknya (`@source`), termasuk halaman dan script super admin, jadi class baru di HTML/JS harus di-build ulang.
 
 ### Akun uji (seed_dummy.sql)
 
