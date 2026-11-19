@@ -48,7 +48,6 @@ function renderKepala() {
   const rata = u.total ? (Object.entries(u.sebaran).reduce((n, [b, j]) => n + b * j, 0) / u.total) : null;
   isi('info').innerHTML = `
     <span>${SVG_S.pin}${esc(kos.alamat)}, ${esc(kos.kecamatan)}</span>
-    ${kos.jarak_kampus_km !== null ? `<span>🎓 ${kos.jarak_kampus_km.toLocaleString('id-ID')} km ke kampus</span>` : ''}
     <span>★ ${rata ? `${rata.toLocaleString('id-ID', { maximumFractionDigits: 1 })} (${u.total} ulasan)` : 'Belum ada ulasan'}</span>
     <span>Pemilik: ${esc(kos.pemilik_nama)}</span>`;
 
@@ -167,7 +166,6 @@ function renderLokasi() {
   isi('lokasi').innerHTML = `
     <iframe title="Peta lokasi ${esc(kos.nama_kos)}" loading="lazy" referrerpolicy="no-referrer"
       src="https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=16&output=embed"></iframe>
-    <div class="info"><span>Jarak ke kampus</span><b>${kos.jarak_kampus_km !== null ? `${kos.jarak_kampus_km.toLocaleString('id-ID')} km` : '-'}</b></div>
     <div class="info"><span>Kecamatan</span><b>${esc(kos.kecamatan)}, ${esc(kos.kota)}</b></div>
     <a class="btn-garis" href="${esc(linkMaps)}" target="_blank" rel="noopener">Buka di Google Maps</a>`;
 }

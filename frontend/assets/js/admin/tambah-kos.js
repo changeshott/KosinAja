@@ -40,7 +40,7 @@ function isiForm(k) {
   tandaiStatus(k.is_published);
 
   const f = form.elements;
-  ['nama_kos', 'alamat', 'kecamatan', 'kota', 'jarak_kampus_km', 'google_maps_url', 'deskripsi', 'peraturan_kos']
+  ['nama_kos', 'alamat', 'kecamatan', 'kota', 'google_maps_url', 'deskripsi', 'peraturan_kos']
     .forEach((n) => { f[n].value = k[n] ?? ''; });
   form.querySelector(`[name="tipe_kos"][value="${k.tipe_kos}"]`).checked = true;
   galeri.isi(k.foto);
@@ -65,8 +65,7 @@ function kumpulkanData(publish) {
     is_published: publish,
     fasilitas_ids: [...document.querySelectorAll('#cek-fasilitas input:checked')].map((c) => Number(c.value)),
   };
-  // Kolom angka/URL opsional: jangan kirim string kosong supaya lolos validasi numeric
-  if (f.jarak_kampus_km.value) data.jarak_kampus_km = f.jarak_kampus_km.value;
+  // Kolom URL opsional: jangan kirim string kosong
   if (f.google_maps_url.value.trim()) data.google_maps_url = f.google_maps_url.value.trim();
   return data;
 }

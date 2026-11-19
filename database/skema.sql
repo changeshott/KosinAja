@@ -64,7 +64,6 @@ CREATE TABLE kos (
     kota VARCHAR(100) NOT NULL DEFAULT 'Malang',
     latitude NUMERIC(9, 6),
     longitude NUMERIC(9, 6),
-    jarak_kampus_km NUMERIC(5, 2) CHECK (jarak_kampus_km >= 0), -- [v2] satuan dikunci ke km
     google_maps_url TEXT,
     deskripsi TEXT,
     peraturan_kos TEXT,
@@ -322,7 +321,6 @@ SELECT k.id AS kamar_id,
        s.tipe_kos,
        s.kecamatan,
        s.kota,
-       s.jarak_kampus_km,
        (SELECT url_foto FROM foto_kos f WHERE f.kos_id = s.id AND f.is_utama) AS foto_utama,
        r.rating_rata,
        COALESCE(r.jumlah_ulasan, 0) AS jumlah_ulasan

@@ -11,7 +11,6 @@ class KatalogModel
     private const URUT = [
         'termurah' => 'harga_mulai ASC',
         'termahal' => 'harga_mulai DESC',
-        'terdekat' => 's.jarak_kampus_km ASC NULLS LAST',
         'rating'   => 'r.rating_rata DESC NULLS LAST',
     ];
 
@@ -84,11 +83,11 @@ class KatalogModel
             $having[] = 'MIN(k.harga_per_bulan) <= :hmax';
             $p['hmax'] = $f['harga_max'];
         }
-        $urut = self::URUT[$f['urut'] ?? ''] ?? 'r.rating_rata DESC NULLS LAST, s.jarak_kampus_km ASC NULLS LAST';
+        $urut = self::URUT[$f['urut'] ?? ''] ?? 'r.rating_rata DESC NULLS LAST, s.id ASC';
         $favorit = $penggunaId ? 'EXISTS (SELECT 1 FROM favorit fv WHERE fv.kos_id = s.id AND fv.pengguna_id = ' . (int) $penggunaId . ')' : 'FALSE';
 
         $sql = "
-            SELECT s.id, s.nama_kos, s.tipe_kos, s.alamat, s.kecamatan, s.kota, s.jarak_kampus_km,
+            SELECT s.id, s.nama_kos, s.tipe_kos, s.alamat, s.kecamatan, s.kota,
                    (SELECT url_foto FROM foto_kos f WHERE f.kos_id = s.id ORDER BY f.is_utama DESC, f.id LIMIT 1) AS foto_utama,
                    MIN(k.harga_per_bulan) AS harga_mulai,
                    COUNT(k.id) FILTER (WHERE k.status = 'Tersedia') AS kamar_tersedia,
@@ -117,7 +116,7 @@ class KatalogModel
         return ['total' => $total, 'items' => array_map(function ($r) {
             unset($r['total_semua']);
             $r['fasilitas'] = json_decode($r['fasilitas'], true);
-            return angka($r, ['jarak_kampus_km', 'harga_mulai', 'rating_rata']);
+            return angka($r, ['harga_mulai', 'rating_rata']);
         }, $baris)];
     }
 
@@ -136,12 +135,12 @@ class KatalogModel
     {
         $kos = DB::satu('
             SELECT s.id, s.nama_kos, s.tipe_kos, s.alamat, s.kecamatan, s.kota, s.latitude, s.longitude,
-                   s.jarak_kampus_km, s.google_maps_url, s.deskripsi, s.peraturan_kos, s.created_at,
+                   s.google_maps_url, s.deskripsi, s.peraturan_kos, s.created_at,
                    p.nama_lengkap AS pemilik_nama, p.no_telepon AS pemilik_telepon, p.created_at AS pemilik_sejak
               FROM kos s JOIN pengguna p ON p.id = s.pengguna_id
              WHERE s.id = :id AND s.is_published', ['id' => $kosId])
             ?? Response::notFound('Kos tidak ditemukan atau belum dipublikasikan');
-        $kos = angka($kos, ['latitude', 'longitude', 'jarak_kampus_km']);
+        $kos = angka($kos, ['latitude', 'longitude']);
         $kos['pemilik_inisial'] = inisial($kos['pemilik_nama']);
         $kos['pemilik_wa'] = $user ? linkWhatsApp($kos['pemilik_telepon']) : null;
         if (!$user) {
