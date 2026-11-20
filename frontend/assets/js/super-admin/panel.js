@@ -28,7 +28,9 @@ async function muatRingkasan() {
   const set = (id, val) => { const el = document.querySelector(`#${id}`); if (el) el.textContent = Number(val || 0).toLocaleString('id-ID'); };
   set('stat-menunggu', d.menunggu); set('stat-aktif', halaman === 'konfirmasi' ? d.disetujui_bulan_ini : d.aktif); set('stat-ditolak', d.ditolak_bulan_ini);
   set('stat-terverifikasi', d.terverifikasi); set('stat-nonaktif', d.nonaktif);
-  set('badge-menunggu', d.menunggu); set('tag-menunggu', `${Number(d.menunggu || 0).toLocaleString('id-ID')} menunggu`);
+  set('badge-menunggu', d.menunggu);
+  const tagMenunggu = document.querySelector('#tag-menunggu');
+  if (tagMenunggu) tagMenunggu.textContent = `${Number(d.menunggu || 0).toLocaleString('id-ID')} menunggu`;
 }
 
 async function muatData() {
