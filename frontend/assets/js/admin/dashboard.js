@@ -65,20 +65,20 @@ function renderHero({ kos_aktif: kos, properti }) {
 
 function renderStatistik(s) {
   const kartu = [
-    { judul: 'Total Unit Kamar', ikon: 'gedung', nilai: s.total_unit, ket: 'Kamar' },
-    { judul: 'Kamar Terisi', ikon: 'orang', nilai: s.terisi, ket: `/ ${s.total_unit} Kamar` },
-    { judul: 'Kamar Siap Huni', ikon: 'pintu', nilai: s.siap_huni, ket: 'Unit Kosong', kelas: 'biru' },
-    { judul: 'Pengajuan Reservasi', ikon: 'papan', nilai: s.pengajuan_reservasi, ket: 'Calon Penyewa', kelas: 'oranye', ikonKelas: 'ikon-oranye' },
-    { judul: 'Estimasi Omzet', ikon: 'uang', nilai: rupiahSingkat(s.estimasi_omzet_bulanan), ket: '/ bulan', kelas: 'uang' },
+    { judul: 'Total Unit Kamar', ikon: 'gedung', nilai: s.total_unit, ket: 'Kamar', href: 'kamar', tujuan: 'Kelola Kamar & Unit' },
+    { judul: 'Kamar Terisi', ikon: 'orang', nilai: s.terisi, ket: `/ ${s.total_unit} Kamar`, href: 'penyewa', tujuan: 'Kelola Penyewa' },
+    { judul: 'Kamar Siap Huni', ikon: 'pintu', nilai: s.siap_huni, ket: 'Unit Kosong', kelas: 'biru', href: 'kamar', tujuan: 'Kelola Kamar & Unit' },
+    { judul: 'Pengajuan Reservasi', ikon: 'papan', nilai: s.pengajuan_reservasi, ket: 'Calon Penyewa', kelas: 'oranye', ikonKelas: 'ikon-oranye', href: 'reservasi', tujuan: 'Pengajuan Reservasi' },
+    { judul: 'Estimasi Omzet', ikon: 'uang', nilai: rupiahSingkat(s.estimasi_omzet_bulanan), ket: '/ bulan', kelas: 'uang', href: 'penyewa', tujuan: 'Kelola Penyewa' },
   ];
   $('#statistik').innerHTML = kartu.map((k) => `
-    <div class="kartu stat">
+    <a href="${k.href}" class="kartu stat stat-link" title="Buka ${k.tujuan}">
       <div class="stat-atas">
         <span class="stat-judul">${k.judul}</span>
         <span class="stat-ikon ${k.ikonKelas || 'ikon-biru'}" data-ikon="${k.ikon}"></span>
       </div>
       <div class="stat-nilai ${k.kelas || ''}"><b>${k.nilai}</b><span>${k.ket}</span></div>
-    </div>`).join('');
+    </a>`).join('');
 }
 
 function renderRingkasan(r, namaKos) {

@@ -214,7 +214,7 @@ async function simpan(e) {
 /** Kamar yang sudah punya riwayat reservasi ditolak database (FK RESTRICT), cukup jadikan Draf. */
 async function hapusKamar() {
   const nomor = form.elements.nomor_kamar.value;
-  if (!confirm(`Hapus kamar ${nomor} beserta foto, fasilitas, dan inventarisnya? Tindakan ini tidak bisa dibatalkan.`)) return;
+  if (!confirm(`Hapus kamar ${nomor} beserta foto dan fasilitasnya? Tindakan ini tidak bisa dibatalkan.`)) return;
   const tombol = document.querySelector('#btn-hapus');
   tombol.disabled = true;
   try {

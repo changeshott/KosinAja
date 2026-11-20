@@ -4,7 +4,7 @@
 // GET    /api/kamar?id=3                               detail kamar (form Edit Kamar)
 // POST   /api/kamar        body: kos_id + RULES_KAMAR + RULES_DETAIL + fasilitas_ids, fasilitas_bersama_ids, perbaikan
 // PUT    /api/kamar?id=3   kolom yang berubah saja
-// PATCH  /api/kamar?id=3   body {perbaikan: true|false}   tombol "Belum Terisi" / "Selesai Perbaikan"
+// PATCH  /api/kamar?id=3   body {perbaikan: true|false}   tombol "Mulai Perbaikan" / "Selesai Perbaikan"
 // DELETE /api/kamar?id=3
 require __DIR__ . '/../bootstrap.php';
 
@@ -43,7 +43,19 @@ switch (Request::method()) {
 
     case 'PATCH':
         $id = Request::requireId();
-        $status = KamarModel::setPerbaikan($id, $admin, Validator::validate(Request::body(), ['perbaikan' => 'required|bool'])['perbaikan']);
+        $body = Request::body();
+        $perbaikan = Validator::validate($body, ['perbaikan' => 'required|bool'])['perbaikan'];
+        $jenis = 'Lainnya';
+        $catatan = '';
+        if ($perbaikan) {
+            $data = Validator::validate($body, [
+                'jenis_perbaikan' => 'required|in:Kerusakan bangunan,Plumbing,Instalasi listrik,AC/peralatan,Cat/renovasi,Lainnya',
+                'catatan' => 'string|max:1000',
+            ]);
+            $jenis = $data['jenis_perbaikan'];
+            $catatan = $data['catatan'] ?? '';
+        }
+        $status = KamarModel::setPerbaikan($id, $admin, $perbaikan, $jenis, $catatan);
         Response::ok(['id' => $id, 'status' => $status], "Status kamar: $status");
 
     case 'DELETE':

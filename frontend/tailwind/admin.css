@@ -70,7 +70,7 @@
   svg { flex-shrink: 0; }
   input[type="radio"], input[type="checkbox"] { accent-color: #0075ff; }
 
-  /* Tabel data (Dashboard, Reservasi, Penyewa, Ulasan, Inventaris) */
+  /* Tabel data (Dashboard, Reservasi, Penyewa, Ulasan) */
   table { @apply w-full border-collapse min-w-[820px]; }
   thead th { @apply bg-biru-pucat text-left text-12 font-semibold text-[#475569] py-3.5 px-4 first:rounded-l-xl last:rounded-r-xl last:text-right; }
   tbody td { @apply py-[18px] px-4 border-b border-garis align-middle text-13; }
@@ -150,6 +150,13 @@
 
   /* ---------- Dashboard (dibuat dashboard.js) ---------- */
   .stat { @apply py-5 px-4 min-h-[156px] flex flex-col; }
+  .stat-link {
+    color: inherit;
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+    &:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(30, 41, 59, .14); }
+    &:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+  }
   .stat-atas { @apply flex justify-between gap-2; }
   .stat-judul { @apply text-abu text-14 leading-[1.3]; }
   .stat-ikon { @apply size-10 rounded-[10px] grid place-items-center; }
@@ -363,7 +370,7 @@
   }
   .strip-fasilitas {
     @apply bg-biru-pucat rounded-xl min-h-[34px] py-2 px-3 flex items-center gap-[11px];
-    &.servis span { @apply ml-auto text-12 leading-4 font-medium text-[#b45309]; }
+    &.servis span { @apply ml-auto min-w-0 truncate text-12 leading-4 font-medium text-[#b45309]; }
   }
   .blok-penghuni {
     @apply bg-biru-pucat/70 rounded-xl p-3 flex items-center gap-3;

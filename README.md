@@ -62,9 +62,9 @@ Alur satu fitur selalu sama, jadi mudah ditelusuri:
    & 'C:\laragon\bin\postgresql\postgresql\bin\psql.exe' -U postgres -d kosinaja -f database/install.sql
    ```
 
-   Masukkan password user PostgreSQL `postgres` saat diminta. `install.sql` memasang skema, migrasi bernomor `001`–`006`, lalu data contoh. Jalankan ini hanya untuk database baru/kosong. Kalau database `kosinaja` sudah ada, jangan buat ulang atau menjalankan `install.sql` di atasnya karena seed bukan proses pembaruan.
+   Masukkan password user PostgreSQL `postgres` saat diminta. `install.sql` memasang skema, migrasi bernomor `001`–`006` dan `008`, lalu data contoh. Migrasi `007_password_super_admin.sql` disiapkan terpisah untuk akun super admin. Jalankan install ini hanya untuk database baru/kosong. Kalau database `kosinaja` sudah ada, jangan buat ulang atau menjalankan `install.sql` di atasnya karena seed bukan proses pembaruan.
 
-   Alternatif memakai HeidiSQL/pgAdmin: buat database `kosinaja`, lalu jalankan `skema.sql`, file `migrasi/001_...sql` sampai `migrasi/006_...sql` berurutan, dan terakhir `seed_dummy.sql`. Jangan jalankan `install.sql` lewat HeidiSQL karena file itu memakai perintah khusus `psql` (`\ir`).
+   Alternatif memakai HeidiSQL/pgAdmin: buat database `kosinaja`, lalu jalankan `skema.sql`, migrasi `001`–`006`, migrasi `008_perbaikan_kamar.sql`, dan terakhir `seed_dummy.sql`. Jangan jalankan `install.sql` lewat HeidiSQL karena file itu memakai perintah khusus `psql` (`\ir`).
 
 3. Pastikan `backend/config/config.php` ada. File ini tidak disertakan di Git karena berisi password; jika belum ada, buat file tersebut dengan isi berikut dan sesuaikan password serta port dengan PostgreSQL Laragon:
 
@@ -234,8 +234,7 @@ Role `admin` = pemilik kos, `penyewa` = mahasiswa. Endpoint pemilik memanggil `A
 | Favorit | `GET / POST api/akun?bagian=favorit`, `DELETE ?bagian=favorit&kos_id=` | penyewa |
 | Dashboard | `GET api/dashboard?kos_id=1` | pemilik |
 | Kos | `GET / POST api/kos`, `GET / PUT / DELETE ?id=` | pemilik |
-| Kamar | `GET api/kamar?kos_id=&status=&tipe_kamar=&q=`, `POST`, `GET / PUT / PATCH / DELETE ?id=` | PATCH `{"perbaikan": true}` |
-| Inventaris | `api/inventaris`: `GET ?kamar_id=`, `POST`, `PUT ?id=`, `DELETE ?id=` | |
+| Kamar | `GET api/kamar?kos_id=&status=&tipe_kamar=&q=`, `POST`, `GET / PUT / PATCH / DELETE ?id=` | PATCH `{"perbaikan": true}` untuk menutup perbaikan; mulai perbaikan mengirim jenis dan catatan |
 | Pengajuan Reservasi | `GET api/reservasi?kos_id=&status=menunggu&q=&page=` | |
 | Aksi reservasi | `PATCH api/reservasi?id=7&aksi=setujui\|tolak\|survei\|selesai\|batalkan\|pembayaran` | tolak: `catatan_pemilik`, survei: `jadwal_survei`, pembayaran: `jumlah_dp, status_pembayaran` |
 | Kelola Penyewa | `GET api/penyewa?kos_id=&kamar_id=&status=aktif\|akan_masuk\|selesai\|semua&q=`, `GET ?id=` | `q` cocok ke nama, email, nomor kamar |
@@ -245,7 +244,7 @@ Role `admin` = pemilik kos, `penyewa` = mahasiswa. Endpoint pemilik memanggil `A
 
 ## Menambah fitur baru
 
-1. **Tabel/kolom baru**: buat `database/migrasi/005_nama.sql`, daftarkan di `database/install.sql` (sebelum seed).
+1. **Tabel/kolom baru**: buat migrasi bernomor berikutnya, daftarkan di `database/install.sql` sebelum seed, dan perbarui database yang sudah ada dengan migrasi tersebut.
 2. **Query**: tambah method di model yang sesuai (atau `backend/models/NamaModel.php` baru, otomatis ter-load).
    Pakai helper `DB`, contoh:
    ```php

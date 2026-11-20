@@ -63,6 +63,15 @@ function cari(teks) {
   terapkan();
 }
 
+/** Aktifkan atau lepaskan filter dari tombol pencarian populer. */
+function toggleChip(kunci, nilai) {
+  if (!KUNCI_FILTER.includes(kunci)) return;
+  if (filter[kunci] === nilai) delete filter[kunci];
+  else filter[kunci] = nilai;
+  syncChip();
+  terapkan();
+}
+
 function hapusFilter(kunci) {
   if (kunci === 'semua') {
     Object.keys(filter).forEach((k) => delete filter[k]);

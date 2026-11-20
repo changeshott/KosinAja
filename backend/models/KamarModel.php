@@ -60,7 +60,8 @@ class KamarModel
                    (SELECT COALESCE(json_agg(f.nama_fasilitas ORDER BY f.id), '[]')
                       FROM fasilitas_kamar fk JOIN fasilitas f ON f.id = fk.fasilitas_id WHERE fk.kamar_id = k.id) AS fasilitas,
                    p.nama_lengkap AS penghuni, p.no_telepon AS penghuni_telepon,
-                   r.id AS reservasi_id, r.tanggal_keluar AS sewa_berakhir
+                   r.id AS reservasi_id, r.tanggal_keluar AS sewa_berakhir,
+                   pk.jenis_perbaikan, pk.catatan AS catatan_perbaikan
               FROM kamar k
               LEFT JOIN detail_kamar d ON d.kamar_id = k.id
               LEFT JOIN LATERAL (
@@ -69,6 +70,10 @@ class KamarModel
                      ORDER BY rv.tanggal_masuk LIMIT 1
                    ) r ON TRUE
               LEFT JOIN pengguna p ON p.id = r.pengguna_id
+              LEFT JOIN LATERAL (
+                    SELECT jenis_perbaikan, catatan FROM perbaikan_kamar
+                     WHERE kamar_id = k.id AND selesai_at IS NULL ORDER BY mulai_at DESC LIMIT 1
+                   ) pk ON TRUE
              WHERE " . implode(' AND ', $where) . '
              ORDER BY d.lantai NULLS LAST, k.nomor_kamar', $p);
         return array_map(function ($r) {
@@ -77,7 +82,7 @@ class KamarModel
         }, $baris);
     }
 
-    /** Form Edit Kamar: kamar + detail + fasilitas + foto + inventaris. */
+    /** Form Edit Kamar: kamar + detail + fasilitas + foto. */
     public static function find(int $kamarId, int $adminId): array
     {
         $kamar = angka(self::pastikanMilik($kamarId, $adminId), ['harga_per_bulan', 'deposit_kunci']);
@@ -88,7 +93,6 @@ class KamarModel
               FROM fasilitas_kamar fk JOIN fasilitas f ON f.id = fk.fasilitas_id
              WHERE fk.kamar_id = :id ORDER BY f.id', ['id' => $kamarId]);
         $kamar['foto'] = DB::semua('SELECT id, url_foto, urutan FROM foto_kamar WHERE kamar_id = :id ORDER BY urutan, id', ['id' => $kamarId]);
-        $kamar['inventaris'] = InventarisModel::listByKamar($kamarId);
         return $kamar;
     }
 
@@ -121,18 +125,26 @@ class KamarModel
      * Status Dipesan/Terisi diatur trigger dari reservasi. Pemilik hanya boleh menandai 'Perbaikan'
      * atau mengembalikannya; saat dikembalikan, status dihitung ulang dari reservasi aktif.
      */
-    public static function setPerbaikan(int $kamarId, int $adminId, bool $perbaikan): string
+    public static function setPerbaikan(int $kamarId, int $adminId, bool $perbaikan, string $jenis = 'Lainnya', string $catatan = ''): string
     {
         self::pastikanMilik($kamarId, $adminId);
-        return DB::nilai($perbaikan
-            ? "UPDATE kamar SET status = 'Perbaikan', updated_at = CURRENT_TIMESTAMP WHERE id = :id RETURNING status"
-            : "UPDATE kamar k SET updated_at = CURRENT_TIMESTAMP, status = COALESCE((
-                   SELECT CASE WHEN bool_or(status_reservasi = 'Disetujui') THEN 'Terisi' ELSE 'Dipesan' END::status_kamar_enum
-                     FROM reservasi r
-                    WHERE r.kamar_id = k.id AND r.status_reservasi IN ('Pending', 'Survei', 'Disetujui')
-                      AND r.tanggal_keluar > CURRENT_DATE
-                   HAVING COUNT(*) > 0), 'Tersedia')
-                WHERE id = :id RETURNING status", ['id' => $kamarId]);
+        return DB::transaksi(function () use ($kamarId, $perbaikan, $jenis, $catatan) {
+            $status = DB::nilai($perbaikan
+                ? "UPDATE kamar SET status = 'Perbaikan', updated_at = CURRENT_TIMESTAMP WHERE id = :id RETURNING status"
+                : "UPDATE kamar k SET updated_at = CURRENT_TIMESTAMP, status = COALESCE((
+                       SELECT CASE WHEN bool_or(status_reservasi = 'Disetujui') THEN 'Terisi' ELSE 'Dipesan' END::status_kamar_enum
+                         FROM reservasi r
+                        WHERE r.kamar_id = k.id AND r.status_reservasi IN ('Pending', 'Survei', 'Disetujui')
+                          AND r.tanggal_keluar > CURRENT_DATE
+                       HAVING COUNT(*) > 0), 'Tersedia')
+                    WHERE id = :id RETURNING status", ['id' => $kamarId]);
+            if ($perbaikan) {
+                DB::insert('perbaikan_kamar', ['kamar_id' => $kamarId, 'jenis_perbaikan' => $jenis, 'catatan' => $catatan]);
+            } else {
+                DB::query('UPDATE perbaikan_kamar SET selesai_at = CURRENT_TIMESTAMP WHERE kamar_id = :id AND selesai_at IS NULL', ['id' => $kamarId]);
+            }
+            return $status;
+        });
     }
 
     /** Ditolak FK (RESTRICT) kalau kamar sudah punya riwayat reservasi -> pesan ramah dari helpers.php. */

@@ -7,6 +7,46 @@ const FRONTEND = new URL('../../../', document.currentScript.src).href;
 const API = `${FRONTEND}api`;
 const ASET = `${FRONTEND}assets/img`;
 
+let permintaanAktif = 0;
+let waktuTundaLoading = null;
+let indikatorLoading = null;
+
+function mulaiLoadingApi() {
+  permintaanAktif++;
+  if (permintaanAktif === 1) {
+    waktuTundaLoading = setTimeout(() => {
+      if (!document.body) return;
+      if (!indikatorLoading) {
+        const gaya = document.createElement('style');
+        gaya.textContent = `
+          #indikator-api { position:fixed; inset:0 0 auto; height:3px; z-index:9999; overflow:hidden; background:#dbeafe; opacity:0; transition:opacity .15s ease; pointer-events:none; }
+          #indikator-api.tampil { opacity:1; }
+          #indikator-api::after { content:""; display:block; width:35%; height:100%; border-radius:0 3px 3px 0; background:linear-gradient(90deg,#2563eb,#60a5fa,#2563eb); animation:gerak-indikator-api 1.1s ease-in-out infinite; }
+          #indikator-api span { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+          @keyframes gerak-indikator-api { from { transform:translateX(-100%); } to { transform:translateX(290%); } }
+          @media (prefers-reduced-motion:reduce) { #indikator-api::after { width:100%; animation:none; } }
+        `;
+        document.head.append(gaya);
+        indikatorLoading = document.createElement('div');
+        indikatorLoading.id = 'indikator-api';
+        indikatorLoading.setAttribute('role', 'status');
+        indikatorLoading.setAttribute('aria-live', 'polite');
+        indikatorLoading.innerHTML = '<span>Memuat data...</span>';
+        document.body.prepend(indikatorLoading);
+      }
+      indikatorLoading.classList.add('tampil');
+    }, 250);
+  }
+}
+
+function selesaiLoadingApi() {
+  permintaanAktif = Math.max(0, permintaanAktif - 1);
+  if (permintaanAktif) return;
+  clearTimeout(waktuTundaLoading);
+  waktuTundaLoading = null;
+  indikatorLoading?.classList.remove('tampil');
+}
+
 /**
  * Panggil API backend. Melempar objek { message, errors } kalau success = false.
  * options.signal (AbortController) boleh dipakai; request yang dibatalkan melempar error name 'AbortError'.
@@ -18,23 +58,28 @@ async function api(path, options = {}) {
     opsi.headers = { 'Content-Type': 'application/json', ...opsi.headers };
   }
 
-  let res;
+  mulaiLoadingApi();
   try {
-    res = await fetch(`${API}/${path}`, opsi);
-  } catch (e) {
-    if (e.name === 'AbortError') throw e;
-    throw { message: 'Server tidak bisa dihubungi. Pastikan Laragon sudah Start All.' };
-  }
+    let res;
+    try {
+      res = await fetch(`${API}/${path}`, opsi);
+    } catch (e) {
+      if (e.name === 'AbortError') throw e;
+      throw { message: 'Server tidak bisa dihubungi. Pastikan Laragon sudah Start All.' };
+    }
 
-  let json;
-  try {
-    json = await res.json();
-  } catch (e) {
-    if (e.name === 'AbortError') throw e;
-    throw { message: `Respons server tidak valid (HTTP ${res.status})` };
+    let json;
+    try {
+      json = await res.json();
+    } catch (e) {
+      if (e.name === 'AbortError') throw e;
+      throw { message: `Respons server tidak valid (HTTP ${res.status})` };
+    }
+    if (!json.success) throw { ...json, status: res.status };
+    return json.data;
+  } finally {
+    selesaiLoadingApi();
   }
-  if (!json.success) throw { ...json, status: res.status };
-  return json.data;
 }
 
 // ---------- Akun ----------

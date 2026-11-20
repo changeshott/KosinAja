@@ -62,57 +62,33 @@
       </div>
     </section>
 
-    <!-- GRID VIEW: Room Cards Inventory -->
+    <!-- Kartu kamar dengan aksi status perbaikan -->
     <section class="grid-kamar" id="grid-kamar"></section>
   </main>
 </div>
 
-<!-- Inventaris kamar: barang fisik + jumlah + kondisi (CRUD api/inventaris) -->
-<div class="modal" id="modal-inventaris">
-  <div class="modal-isi sangat-lebar" role="dialog" aria-modal="true" aria-labelledby="judul-inventaris">
-    <div class="flex justify-between items-start gap-4 mb-4">
-      <div>
-        <h3 class="font-judul text-20" id="judul-inventaris">Inventaris Kamar</h3>
-        <p class="m-0 text-13 text-abu">Catat barang fisik di kamar beserta jumlah dan kondisinya. Data ini hanya terlihat oleh Anda.</p>
-      </div>
-      <button type="button" class="btn-ikon size-9" data-tutup aria-label="Tutup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+<div class="modal" id="modal-perbaikan">
+  <form class="modal-isi lebar" id="form-perbaikan" role="dialog" aria-modal="true" aria-labelledby="judul-perbaikan">
+    <h3 class="font-judul text-20" id="judul-perbaikan">Mulai Perbaikan</h3>
+    <p id="deskripsi-perbaikan">Pilih jenis pekerjaan dan catat detailnya.</p>
+    <label class="block text-13 font-semibold mb-3">Jenis Perbaikan
+      <span class="select-putih mt-1.5"><select class="h-10!" name="jenis_perbaikan" required>
+        <option value="Kerusakan bangunan">Kerusakan bangunan</option>
+        <option value="Plumbing">Plumbing (air / pipa)</option>
+        <option value="Instalasi listrik">Instalasi listrik</option>
+        <option value="AC/peralatan">AC atau peralatan</option>
+        <option value="Cat/renovasi">Cat / renovasi</option>
+        <option value="Lainnya">Lainnya</option>
+      </select><img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt=""></span>
+    </label>
+    <label class="block text-13 font-semibold">Catatan
+      <textarea name="catatan" maxlength="1000" placeholder="Contoh: keran kamar mandi bocor, perlu diganti"></textarea>
+    </label>
+    <div class="modal-aksi">
+      <button type="button" class="btn-abu" data-batal-perbaikan>Batal</button>
+      <button type="submit" class="btn-biru" id="simpan-perbaikan">Simpan Perbaikan</button>
     </div>
-
-    <form class="grid grid-cols-[2fr_90px_1.4fr_2fr] gap-3 items-start p-4 mb-5 rounded-xl bg-latar max-md:grid-cols-2 max-sm:grid-cols-1
-                 [&_label]:flex [&_label]:flex-col [&_label]:gap-1.5 [&_label]:text-12 [&_label]:font-semibold [&_.input]:min-h-10 [&_.input]:py-2 [&_.input]:px-3"
-          id="form-inventaris" novalidate>
-      <label>Nama Barang <span class="sr-only">(wajib)</span>
-        <input class="input" name="nama_barang" maxlength="100" placeholder="Contoh: Kasur" required>
-        <span class="galat-field font-normal" data-galat="nama_barang"></span>
-      </label>
-      <label>Jumlah
-        <input class="input" name="jumlah" type="number" min="0" max="999" value="1">
-        <span class="galat-field font-normal" data-galat="jumlah"></span>
-      </label>
-      <label>Kondisi
-        <span class="select-putih">
-          <select class="h-10!" name="kondisi">
-            <option>Baik</option><option>Rusak Ringan</option><option>Rusak Berat</option><option>Hilang</option>
-          </select>
-          <img src="../assets/img/ikon-select.svg" width="10" height="6.167" alt="">
-        </span>
-      </label>
-      <label>Catatan
-        <input class="input" name="catatan" maxlength="255" placeholder="Opsional, misal: retak di sudut">
-      </label>
-      <div class="col-span-full flex gap-2 justify-end">
-        <button type="button" class="btn-abu" id="batal-edit-inventaris" hidden>Batal Ubah</button>
-        <button type="submit" class="btn-biru text-13 py-2 px-4" id="simpan-inventaris">+ Tambah Barang</button>
-      </div>
-    </form>
-
-    <div class="tabel-wrap">
-      <table class="min-w-[560px]">
-        <thead><tr><th>Barang</th><th>Jumlah</th><th>Kondisi</th><th>Catatan</th><th>Aksi</th></tr></thead>
-        <tbody id="isi-inventaris"></tbody>
-      </table>
-    </div>
-  </div>
+  </form>
 </div>
 
 <script src="../assets/js/inti/api.js"></script>
