@@ -7,6 +7,24 @@ const FRONTEND = new URL('../../../', document.currentScript.src).href;
 const API = `${FRONTEND}api`;
 const ASET = `${FRONTEND}assets/img`;
 
+/**
+ * Peran yang sedang dipakai halaman ini: 'penyewa' | 'admin' | 'super_admin'.
+ * Dikirim ke backend lewat header X-Peran supaya satu browser bisa login beberapa
+ * peran sekaligus di tab berbeda (super admin di satu tab, pemilik kos di tab lain)
+ * tanpa saling melempar keluar -- tiap peran punya slot session sendiri.
+ * Halaman login/daftar sudah menandai dirinya lewat <body data-sebagai="...">,
+ * sisanya ditebak dari folder halaman (/admin/..., /super-admin/...).
+ */
+function peranHalaman() {
+  const ditandai = document.body?.dataset?.sebagai;
+  if (['penyewa', 'admin', 'super_admin'].includes(ditandai)) return ditandai;
+
+  const rel = location.href.startsWith(FRONTEND) ? location.href.slice(FRONTEND.length) : location.pathname;
+  if (/^super-admin(\/|$)/.test(rel) || rel.includes('masuk-super-admin')) return 'super_admin';
+  if (/^admin(\/|$)/.test(rel) || rel.includes('masuk-pemilik') || rel.includes('daftar-mitra')) return 'admin';
+  return 'penyewa';
+}
+
 let permintaanAktif = 0;
 let waktuTundaLoading = null;
 let indikatorLoading = null;
@@ -57,6 +75,8 @@ async function api(path, options = {}) {
     opsi.body = JSON.stringify(opsi.body);
     opsi.headers = { 'Content-Type': 'application/json', ...opsi.headers };
   }
+  // Beri tahu backend peran mana yang diminta halaman ini (sesi dipisah per peran)
+  opsi.headers = { 'X-Peran': peranHalaman(), ...opsi.headers };
 
   mulaiLoadingApi();
   try {
@@ -93,6 +113,7 @@ async function akunSaya() {
   return _akun;
 }
 
+/** Keluar dari peran halaman ini saja; peran lain di tab sebelah tetap login. */
 async function keluar(tujuan) {
   try { await api('auth?aksi=keluar', { method: 'POST' }); } catch { /* tetap pindah halaman */ }
   location.href = tujuan;

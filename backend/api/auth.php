@@ -3,7 +3,7 @@
 // GET  /api/auth                  pengguna yang sedang login (null kalau belum); pemilik dapat nik_samar
 // POST /api/auth?aksi=masuk       body {email, password, sebagai: penyewa|admin|super_admin}
 // POST /api/auth?aksi=daftar      body {nama_lengkap, email, no_telepon, password, sebagai, nik (wajib untuk admin)}
-// POST /api/auth?aksi=keluar
+// POST /api/auth?aksi=keluar    keluar dari satu peran saja (lihat header X-Peran di Auth.php)
 // POST /api/auth?aksi=lupa        body {email}             kirim tautan reset (lihat backend/storage/email.log)
 // POST /api/auth?aksi=reset       body {token, password}   buat kata sandi baru dari tautan email
 // PUT  /api/auth                  body {nama_lengkap, no_telepon}        ubah profil sendiri
@@ -60,7 +60,8 @@ switch (match (Request::method()) { 'GET' => 'GET', 'PUT' => $aksi === 'sandi' ?
             Response::error('Akun dinonaktifkan. Hubungi administrator.', 403);
         }
         Auth::masuk($p);
-        Response::ok(Auth::user(), 'Berhasil masuk');
+        // Ambil dari slot peran akun ini, bukan peran halaman, supaya pasti cocok
+        Response::ok(Auth::user($p['role']), 'Berhasil masuk');
 
     case 'POST daftar':
         if (($body['sebagai'] ?? '') === 'super_admin') {
@@ -86,7 +87,7 @@ switch (match (Request::method()) { 'GET' => 'GET', 'PUT' => $aksi === 'sandi' ?
             Response::created(['menunggu_verifikasi' => true], 'Pendaftaran berhasil. Akun Anda menunggu verifikasi administrator.');
         }
         Auth::masuk($akun);
-        Response::created(Auth::user(), 'Akun berhasil dibuat');
+        Response::created(Auth::user($akun['role']), 'Akun berhasil dibuat');
 
     case 'POST keluar':
         Auth::keluar();
