@@ -11,6 +11,7 @@
 
 @source "../masuk.html";
 @source "../masuk-pemilik.html";
+@source "../masuk-super-admin.html";
 @source "../daftar.html";
 @source "../daftar-mitra.html";
 @source "../lupa-sandi.html";
@@ -66,6 +67,16 @@
   .branding-atas { @apply relative flex justify-between items-center; }
   .merek { @apply inline-flex items-center gap-2.5 font-judul font-bold text-18; }
   .merek-lambang { @apply size-[30px] rounded-[9px] grid place-items-center bg-white text-aksen; }
+
+  /* ---------- Baris atas kolom form: merek + tombol kembali ke beranda ---------- */
+  .baris-atas { @apply flex items-center justify-between gap-3; }
+  .tombol-kembali {
+    @apply inline-flex items-center gap-2 h-9 px-3.5 rounded-full border border-garis bg-white
+           text-13 font-semibold text-abu transition-colors duration-150
+           hover:bg-latar hover:text-navy hover:border-abu-muda;
+    & svg { @apply shrink-0; }
+  }
+
   .lencana { @apply inline-flex items-center gap-1.5 py-[7px] px-[11px] rounded-full text-11 font-semibold bg-white/16 border border-white/25; }
   .ilustrasi {
     @apply relative h-[300px] my-auto max-md:hidden;
