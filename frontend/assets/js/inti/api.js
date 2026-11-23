@@ -25,6 +25,26 @@ function peranHalaman() {
   return 'penyewa';
 }
 
+/**
+ * Kunci tab browser ini. Disimpan di sessionStorage -- satu-satunya penyimpanan
+ * browser yang benar-benar per tab: tab baru selalu mulai kosong, dan isinya
+ * hilang saat tab ditutup. Cookie PHPSESSID tetap dipakai bersama semua tab
+ * (tidak bisa diubah), jadi kunci inilah yang membuat backend tahu tab mana
+ * yang bicara, lalu memberi slot login terpisah untuk tiap tab.
+ *
+ * Akibatnya: login penyewa di tab 1 TIDAK ikut terbawa ke tab yang baru dibuka.
+ */
+const KUNCI_TAB = 'kosinaja-tab';
+function idTab() {
+  let id = null;
+  try { id = sessionStorage.getItem(KUNCI_TAB); } catch { return '-'; } // mode privat ketat
+  if (!id) {
+    id = (crypto.randomUUID?.() ?? `${Date.now()}${Math.random().toString(36).slice(2)}`).replace(/[^A-Za-z0-9]/g, '');
+    try { sessionStorage.setItem(KUNCI_TAB, id); } catch { return '-'; }
+  }
+  return id;
+}
+
 let permintaanAktif = 0;
 let waktuTundaLoading = null;
 let indikatorLoading = null;
@@ -75,8 +95,8 @@ async function api(path, options = {}) {
     opsi.body = JSON.stringify(opsi.body);
     opsi.headers = { 'Content-Type': 'application/json', ...opsi.headers };
   }
-  // Beri tahu backend peran mana yang diminta halaman ini (sesi dipisah per peran)
-  opsi.headers = { 'X-Peran': peranHalaman(), ...opsi.headers };
+  // Beri tahu backend tab mana & peran apa; sesi login dipisah per (tab, peran)
+  opsi.headers = { 'X-Tab': idTab(), 'X-Peran': peranHalaman(), ...opsi.headers };
 
   mulaiLoadingApi();
   try {
