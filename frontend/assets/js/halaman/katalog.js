@@ -6,6 +6,7 @@
 const PER_HALAMAN = 9;
 const KUNCI_FILTER = ['q', 'harga_min', 'harga_max', 'tipe_kos', 'kecamatan', 'fasilitas', 'tersedia'];
 const TUNDA_HARGA = 600;
+const KUNCI_LOKASI = 'kosinaja-lokasi-pencarian';
 let nomorMuat = 0; // cegah hasil lama menimpa hasil baru
 let pengendali = null; // AbortController request katalog yang sedang berjalan
 let tundaHarga;
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     CariLangsung.tutup();
     CariLangsung.simpanRiwayat(input.value);
+    const urutAlami = urutDariKata(input.value);
+    if (urutAlami) document.querySelector('#urut').value = urutAlami;
     terapkan({ riwayat: true, cari: true });
   });
   CariLangsung.pasang({
@@ -31,6 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     saatPilihLokasi: (kecamatan) => {
       panel.elements.kecamatan.value = kecamatan;
       terapkan({ riwayat: true, cari: true }); // kotak cari sudah dikosongkan -> kata kunci lama ikut hilang
+    },
+    saatPilihTipe: (tipe) => {
+      panel.querySelector(`[name="tipe_kos"][value="${tipe}"]`).checked = true;
+      terapkan({ riwayat: true, cari: true });
     },
   });
 
@@ -70,7 +77,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     isiDariUrl();
     muat();
   });
-  document.querySelector('#urut').addEventListener('change', () => terapkan());
+  document.querySelector('#urut').addEventListener('change', () => {
+    if (document.querySelector('#urut').value === 'terdekat') aktifkanTerdekat(true);
+    else terapkan();
+  });
   document.querySelector('#btn-filter-hp').addEventListener('click', bukaPanelHp);
   document.querySelector('#tutup-filter').addEventListener('click', tutupPanelHp);
   document.querySelector('#latar-filter').addEventListener('click', tutupPanelHp);
@@ -86,10 +96,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const atas = document.querySelector('.tata-katalog').getBoundingClientRect().top + scrollY - 96;
     window.scrollTo({ top: atas, behavior: 'smooth' });
   });
-  window.addEventListener('popstate', () => { isiDariUrl(); muat(); });
+  window.addEventListener('popstate', () => {
+    isiDariUrl();
+    if (document.querySelector('#urut').value === 'terdekat' && !lokasiTersimpan()) aktifkanTerdekat(false);
+    else muat();
+  });
 
   isiDariUrl(); // isian dasar (q, harga, jenis, urut) sudah bisa diisi sebelum opsi dimuat
-  muat();
+  if (document.querySelector('#urut').value === 'terdekat' && !lokasiTersimpan()) aktifkanTerdekat(false);
+  else muat();
   const [, hasilOpsi] = await Promise.allSettled([Situs.mulai(), api('katalog?opsi=1')]);
   if (hasilOpsi.status === 'fulfilled') opsi = hasilOpsi.value; // tanpa opsi, filter dasar tetap bisa dipakai
   renderOpsi();
@@ -126,8 +141,14 @@ function isiDariUrl() {
   const fas = (p.get('fasilitas') || '').split(',');
   form.querySelectorAll('[name="fasilitas"]').forEach((c) => { c.checked = fas.includes(c.value); });
   form.elements.tersedia.checked = p.get('tersedia') === '1';
-  document.querySelector('#urut').value = p.get('urut') || 'rating';
+  document.querySelector('#urut').value = p.get('urut') || urutDariKata(p.get('q') || '') || 'rating';
   hargaValid();
+}
+
+function urutDariKata(q) {
+  if (/\b(murah|termurah|budget)\b/i.test(q)) return 'termurah';
+  if (/\b(mahal|termahal)\b/i.test(q)) return 'termahal';
+  return '';
 }
 
 const angka = (v) => (v || '').replace(/\D/g, '');
@@ -187,6 +208,10 @@ function hargaValid() {
 async function muat() {
   const p = new URLSearchParams(location.search);
   if (!p.get('urut')) p.set('urut', 'rating');
+  if (p.get('urut') === 'terdekat') {
+    const lokasi = lokasiTersimpan();
+    if (lokasi) { p.set('latitude', lokasi.latitude); p.set('longitude', lokasi.longitude); }
+  }
   p.set('per_page', PER_HALAMAN);
   const grid = document.querySelector('#grid-kos');
   const nomor = ++nomorMuat;
@@ -218,6 +243,27 @@ async function muat() {
   } finally {
     if (nomor === nomorMuat) grid.removeAttribute('aria-busy');
   }
+}
+
+function lokasiTersimpan() {
+  try { return JSON.parse(sessionStorage.getItem(KUNCI_LOKASI) || 'null'); } catch { return null; }
+}
+
+function aktifkanTerdekat(riwayat) {
+  if (!navigator.geolocation) {
+    toast('Browser ini tidak mendukung lokasi GPS.', true);
+    document.querySelector('#urut').value = 'rating';
+    return;
+  }
+  document.querySelector('#jumlah-hasil').textContent = 'Mencari lokasi...';
+  navigator.geolocation.getCurrentPosition((pos) => {
+    sessionStorage.setItem(KUNCI_LOKASI, JSON.stringify({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }));
+    terapkan({ riwayat });
+  }, () => {
+    toast('Lokasi tidak tersedia. Izinkan akses lokasi di browser lalu coba lagi.', true);
+    document.querySelector('#urut').value = 'rating';
+    terapkan();
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 });
 }
 
 /** Hasil kosong: tawarkan tombol untuk melonggarkan filter, bukan sekadar teks. */

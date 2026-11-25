@@ -178,8 +178,9 @@ function blokPemeriksaan() {
 
 function tombolUtama(k) {
   if (k.status === 'Perbaikan') return `<button class="btn-kartu kuning" data-aksi="selesai">Selesai Perbaikan</button>`;
-  if (k.status === 'Tersedia') return `<button class="btn-kartu biru" data-aksi="perbaikan" title="Tandai kamar sedang diperbaiki">Mulai Perbaikan</button>`;
-  return `<a class="btn-kartu hijau" href="penyewa?kamar_id=${k.id}">Detail Sewa</a>`;
+  const aksiPerbaikan = `<button class="btn-kartu biru" data-aksi="perbaikan" title="Tandai kamar sedang diperbaiki">Mulai Perbaikan</button>`;
+  if (terisi(k)) return `<a class="btn-kartu hijau" href="penyewa?kamar_id=${k.id}">Detail Sewa</a>${aksiPerbaikan}`;
+  return aksiPerbaikan;
 }
 
 async function aksiKartu(e) {

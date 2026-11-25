@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     CariLangsung.tutup();
     CariLangsung.simpanRiwayat(input.value);
+    const urutAlami = urutDariKata(input.value);
+    if (urutAlami) document.querySelector('#urut').value = urutAlami;
     cari(input.value);
     document.querySelector('#daftar-kos').scrollIntoView({ behavior: 'smooth' });
   });
@@ -30,6 +32,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     saatPilihLokasi: (kecamatan) => {
       delete filter.q;
       filter.kecamatan = kecamatan;
+      terapkan();
+      document.querySelector('#daftar-kos').scrollIntoView({ behavior: 'smooth' });
+    },
+    saatPilihTipe: (tipe) => {
+      delete filter.q;
+      filter.tipe_kos = tipe;
+      syncChip();
       terapkan();
       document.querySelector('#daftar-kos').scrollIntoView({ behavior: 'smooth' });
     },
@@ -102,8 +111,15 @@ function isiDariUrl() {
   KUNCI_FILTER.forEach((k) => { if (p.get(k)) filter[k] = p.get(k); });
   document.querySelector('#q').value = filter.q || '';
   const urut = document.querySelector('#urut');
-  if ([...urut.options].some((o) => o.value === p.get('urut'))) urut.value = p.get('urut');
+  const urutUrl = p.get('urut') || urutDariKata(p.get('q') || '') || 'rating';
+  if ([...urut.options].some((o) => o.value === urutUrl)) urut.value = urutUrl;
   syncChip();
+}
+
+function urutDariKata(q) {
+  if (/\b(murah|termurah|budget)\b/i.test(q)) return 'termurah';
+  if (/\b(mahal|termahal)\b/i.test(q)) return 'termahal';
+  return '';
 }
 
 function parameter() {

@@ -154,11 +154,11 @@ Penyiapan Super Admin dan migrasi database instalasi lama: lihat [`database/PAND
 
 Live search ada di `assets/js/inti/cari-langsung.js` dan dipakai kedua halaman.
 
-- Ketik minimal 2 huruf: panel saran berisi **Lokasi** (kecamatan) dan **Kos** (5 teratas, ikut chip filter aktif).
+- Ketik minimal 2 huruf: panel saran berisi **Filter cepat** (tipe putri/putra/campuran), **Lokasi** (kecamatan), dan **Kos** (5 teratas, ikut chip filter aktif).
 - Kotak cari kosong + diklik: **pencarian terakhir** (disimpan di browser, `kosinaja.riwayatCari`) dan **lokasi populer**.
 - Keyboard: `/` fokus ke kotak cari, `↑`/`↓` memilih, `Enter` membuka, `Esc` menutup.
-- Pencarian per kata dan toleran salah ketik: "sukarno hata" menemukan "Soekarno Hatta"; kata umum seperti
-  "jl", "gang", "kos" diabaikan (`KatalogModel::kataKunci`).
+- Pencarian per kata dan toleran salah ketik: nama, alamat, kecamatan, deskripsi, fasilitas, serta sinonim tipe kos ikut dicari; "putri" cocok dengan tipe wanita dan "sukarno hata" menemukan "Soekarno Hatta".
+- Kata seperti "murah" atau "budget" mengurutkan hasil dari harga terendah; "mahal" mengurutkan dari harga tertinggi. Kata penghubung seperti "kos", "dekat", dan "sekitar" tidak menghambat pencarian.
 - Daftar kos memakai skeleton loading, chip filter aktif dengan tombol ×, dan tampilan "tidak ditemukan"
   dengan tombol untuk melonggarkan filter (juga di Katalog).
 
@@ -226,7 +226,7 @@ Role `admin` = pemilik kos, `penyewa` = mahasiswa. Endpoint pemilik memanggil `A
 | Ubah profil | `PUT api/auth` | `{nama_lengkap, no_telepon}` |
 | Ganti kata sandi | `PUT api/auth?aksi=sandi` | `{password_lama, password_baru}` |
 | Lupa / reset kata sandi | `POST api/auth?aksi=lupa` `{email}`, `POST api/auth?aksi=reset` `{token, password}` | token 30 menit, sekali pakai |
-| Katalog (publik) | `GET api/katalog?q=&tipe_kos=&kecamatan=&harga_min=&harga_max=&fasilitas=&tersedia=&urut=&page=` | |
+| Katalog (publik) | `GET api/katalog?q=&tipe_kos=&kecamatan=&harga_min=&harga_max=&fasilitas=&tersedia=&urut=&page=` | `urut=terdekat` memakai `latitude` dan `longitude` dari izin lokasi browser |
 | Detail kos (publik) | `GET api/katalog?id=1` | WA pemilik hanya kalau login |
 | Opsi filter | `GET api/katalog?opsi=1` | |
 | Reservasi Saya | `GET / POST api/akun?bagian=reservasi`, `PATCH ?bagian=reservasi&id=` (batal) | penyewa |

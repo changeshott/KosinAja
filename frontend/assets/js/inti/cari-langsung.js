@@ -30,6 +30,7 @@ const CariLangsung = (() => {
    * @param {() => object} [o.filterSaran]  filter halaman yang ikut dipakai saran kos (tanpa q)
    * @param {() => void}   [o.saatKosong]   kotak cari dikosongkan (mis. tombol × bawaan browser)
    * @param {(kecamatan: string) => void} o.saatPilihLokasi
+   * @param {(tipe: string) => void} [o.saatPilihTipe]
    */
   function pasang(o) {
     opsiHalaman = o;
@@ -106,6 +107,10 @@ const CariLangsung = (() => {
       tutup();
       input.value = '';
       opsiHalaman.saatPilihLokasi(nilai);
+    } else if (aksi === 'tipe') {
+      tutup();
+      input.value = '';
+      opsiHalaman.saatPilihTipe?.(nilai);
     } else {
       form.requestSubmit();
     }
@@ -146,10 +151,12 @@ const CariLangsung = (() => {
 
       const kecil = q.toLowerCase();
       const lokasi = kecamatan.filter((k) => k.toLowerCase().includes(kecil)).slice(0, 3);
-      if (!hasil.items.length && !lokasi.length) {
+      const tipe = tipeDariKata(kecil);
+      if (!hasil.items.length && !lokasi.length && !tipe) {
         return tampil('<div class="saran-status"><b>Kos tidak ditemukan</b>Coba nama jalan atau kecamatan lain.</div>');
       }
       let html = '';
+      if (tipe) html += `<div class="saran-judul">Filter cepat</div>${itemTipe(tipe)}`;
       if (lokasi.length) {
         html += '<div class="saran-judul">Lokasi</div>' + lokasi.map((k, i) => itemLokasi(k, `saran-l${i}`, q)).join('');
       }
@@ -183,6 +190,19 @@ const CariLangsung = (() => {
         <span class="saran-ikon">${IKON_SARAN.pin}</span>
         <span class="saran-label">${q ? sorot(kecamatan, q) : esc(kecamatan)}<small>Kecamatan, Malang</small></span>
       </div>`;
+  }
+
+  function tipeDariKata(q) {
+    if (/\b(putri|perempuan|wanita|cewek|cewe|female)\b/i.test(q)) return { nilai: 'wanita', label: 'Putri / wanita' };
+    if (/\b(putra|laki(?:-laki|2)?|pria|cowok|male)\b/i.test(q)) return { nilai: 'pria', label: 'Putra / pria' };
+    if (/\b(campuran|campur)\b/i.test(q)) return { nilai: 'campuran', label: 'Campuran' };
+    return null;
+  }
+
+  function itemTipe(tipe) {
+    return `<div class="saran-baris" role="option" id="saran-tipe" aria-selected="false" data-aksi="tipe" data-nilai="${tipe.nilai}">
+      <span class="saran-ikon">${IKON_SARAN.pin}</span><span class="saran-label">Kos ${tipe.label}<small>Tampilkan semua kos dengan jenis ini</small></span>
+    </div>`;
   }
 
   function itemKos(k, q, i) {

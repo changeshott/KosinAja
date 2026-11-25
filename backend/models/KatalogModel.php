@@ -6,20 +6,21 @@ class KatalogModel
     private const AMBANG_MIRIP = 0.45;
 
     /** Kata yang tidak membantu pencarian (semua alamat punya "Jl.", semua nama punya "Kos"). */
-    private const KATA_UMUM = ['jl', 'jln', 'jalan', 'gg', 'gang', 'no', 'kos', 'kost', 'di', 'dekat'];
+    private const KATA_UMUM = ['jl', 'jln', 'jalan', 'gg', 'gang', 'no', 'kos', 'kost', 'kosan', 'di', 'dekat', 'sekitar', 'harga', 'paling', 'murah', 'termurah', 'budget', 'mahal', 'termahal'];
 
     private const URUT = [
         'termurah' => 'harga_mulai ASC',
         'termahal' => 'harga_mulai DESC',
         'rating'   => 'r.rating_rata DESC NULLS LAST',
+        'terdekat' => 'jarak_lokasi_km ASC NULLS LAST',
     ];
 
-    /** "Jl. Sukarno Hata" -> ['sukarno', 'hata']. Kalau semua kata umum, pakai teks aslinya. */
+    /** Hilangkan kata penghubung dan maksud urutan harga sebelum mencocokkan kata kunci. */
     private static function kataKunci(string $q): array
     {
         $semua = preg_split('/[^\p{L}\p{N}-]+/u', mb_strtolower(trim($q)), -1, PREG_SPLIT_NO_EMPTY);
         $kata = array_values(array_filter($semua, fn($k) => mb_strlen($k) >= 2 && !in_array($k, self::KATA_UMUM, true)));
-        return array_slice($kata ?: [trim($q)], 0, 5);
+        return array_slice($kata, 0, 5);
     }
 
     /** pg_trgm dipasang lewat migrasi 003; tanpa itu pencarian tetap jalan tanpa toleransi salah ketik. */
@@ -31,7 +32,7 @@ class KatalogModel
 
     /**
      * Kartu kos di Beranda, Katalog, dan Favorit. Satu kartu = satu kos, harga = kamar termurah yang publish.
-     * $f: q, tipe_kos, kecamatan, harga_min, harga_max, fasilitas_ids, tersedia, favorit_saja, urut, limit, offset
+     * $f: q, tipe_kos, kecamatan, harga_min, harga_max, fasilitas_ids, tersedia, favorit_saja, urut, latitude, longitude, limit, offset
      */
     public static function list(array $f, ?int $penggunaId): array
     {
@@ -39,7 +40,18 @@ class KatalogModel
         $p = [];
         if (!empty($f['q'])) {
             // Setiap kata harus cocok ke nama/alamat/kecamatan/kota: persis (ILIKE) atau mirip (pg_trgm)
-            $teks = "(s.nama_kos || ' ' || s.alamat || ' ' || s.kecamatan || ' ' || s.kota)";
+            $teks = "(s.nama_kos || ' ' || s.alamat || ' ' || s.kecamatan || ' ' || s.kota || ' ' || COALESCE(s.deskripsi, '') || ' ' || CASE s.tipe_kos
+                WHEN 'wanita' THEN 'wanita putri perempuan cewek cewe female'
+                WHEN 'pria' THEN 'pria putra laki laki-laki laki2 cowok male'
+                ELSE 'campuran'
+            END || ' ' || COALESCE((
+                SELECT string_agg(f.nama_fasilitas, ' ')
+                  FROM (
+                    SELECT f.nama_fasilitas FROM fasilitas_kos fk JOIN fasilitas f ON f.id = fk.fasilitas_id WHERE fk.kos_id = s.id
+                    UNION
+                    SELECT f.nama_fasilitas FROM kamar kk JOIN fasilitas_kamar fk ON fk.kamar_id = kk.id JOIN fasilitas f ON f.id = fk.fasilitas_id WHERE kk.kos_id = s.id
+                  ) f
+            ), ''))";
             foreach (self::kataKunci($f['q']) as $i => $kata) {
                 $p["q$i"] = '%' . addcslashes($kata, '%_\\') . '%'; // % dan _ ketikan pengguna bukan wildcard
                 if (self::adaTrigram()) {
@@ -83,7 +95,16 @@ class KatalogModel
             $having[] = 'MIN(k.harga_per_bulan) <= :hmax';
             $p['hmax'] = $f['harga_max'];
         }
-        $urut = self::URUT[$f['urut'] ?? ''] ?? 'r.rating_rata DESC NULLS LAST, s.id ASC';
+        $urutDariKata = preg_match('/\b(murah|termurah|budget)\b/u', mb_strtolower($f['q'] ?? ''))
+            ? 'termurah'
+            : (preg_match('/\b(mahal|termahal)\b/u', mb_strtolower($f['q'] ?? '')) ? 'termahal' : '');
+        $urut = self::URUT[$f['urut'] ?? $urutDariKata] ?? 'r.rating_rata DESC NULLS LAST, s.id ASC';
+        $jarak = 'NULL::numeric';
+        if (isset($f['latitude'], $f['longitude'])) {
+            // Haversine (km); placeholder unik untuk PDO native prepare.
+            $jarak = '6371 * 2 * ASIN(SQRT(LEAST(1, POWER(SIN(RADIANS(s.latitude - :lat_a) / 2), 2) + COS(RADIANS(:lat_b)) * COS(RADIANS(s.latitude)) * POWER(SIN(RADIANS(s.longitude - :lon_a) / 2), 2))))';
+            $p += ['lat_a' => $f['latitude'], 'lat_b' => $f['latitude'], 'lon_a' => $f['longitude']];
+        }
         $favorit = $penggunaId ? 'EXISTS (SELECT 1 FROM favorit fv WHERE fv.kos_id = s.id AND fv.pengguna_id = ' . (int) $penggunaId . ')' : 'FALSE';
 
         $sql = "
@@ -93,6 +114,7 @@ class KatalogModel
                    COUNT(k.id) FILTER (WHERE k.status = 'Tersedia') AS kamar_tersedia,
                    COUNT(k.id) AS total_kamar,
                    r.rating_rata, COALESCE(r.jumlah_ulasan, 0) AS jumlah_ulasan,
+                   $jarak AS jarak_lokasi_km,
                    (SELECT COALESCE(json_agg(fa.nama_fasilitas ORDER BY fa.id), '[]')
                       FROM fasilitas_kos fk JOIN fasilitas fa ON fa.id = fk.fasilitas_id
                      WHERE fk.kos_id = s.id) AS fasilitas,

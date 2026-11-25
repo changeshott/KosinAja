@@ -26,6 +26,12 @@ if ($hargaMin !== null && $hargaMax !== null && $hargaMin > $hargaMax) {
     [$hargaMin, $hargaMax] = [$hargaMax, $hargaMin]; // tertukar (mis. URL diketik manual)
 }
 [$page, $perPage] = halaman(12, 48);
+$urut = Request::query('urut');
+$latitude = Request::query('latitude');
+$longitude = Request::query('longitude');
+if ($urut === 'terdekat' && (!is_numeric($latitude) || !is_numeric($longitude) || (float) $latitude < -90 || (float) $latitude > 90 || (float) $longitude < -180 || (float) $longitude > 180)) {
+    Response::error('Aktifkan lokasi untuk mengurutkan kos terdekat.');
+}
 
 Response::ok(KatalogModel::list(array_filter([
     'q'             => Request::query('q'),
@@ -35,7 +41,9 @@ Response::ok(KatalogModel::list(array_filter([
     'harga_max'     => $hargaMax,
     'fasilitas_ids' => Request::query('fasilitas') ? Validator::idList(explode(',', Request::query('fasilitas')), 'fasilitas') : [],
     'tersedia'      => Request::query('tersedia') === '1',
-    'urut'          => Request::query('urut'),
+    'urut'          => $urut,
+    'latitude'      => $urut === 'terdekat' ? (float) $latitude : null,
+    'longitude'     => $urut === 'terdekat' ? (float) $longitude : null,
     'limit'         => $perPage,
     'offset'        => ($page - 1) * $perPage,
 ], fn($v) => $v !== null && $v !== false && $v !== []), $user && $user['role'] === 'penyewa' ? $user['id'] : null)
