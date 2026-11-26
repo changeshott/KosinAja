@@ -102,7 +102,7 @@ function kartu(r) {
   }[k];
 
   const tombol = [];
-  if (['Pending', 'Survei'].includes(r.status_reservasi)) tombol.push(`<button class="btn-garis btn-batal" data-batal="${r.id}">Batalkan</button>`);
+  if (['Pending', 'Survei'].includes(r.status_reservasi)) tombol.push(`<button class="btn-garis btn-batal" data-batal="${r.id}">Batalkan Reservasi</button>`);
   if (r.bisa_diulas) tombol.push(`<button class="btn-utama" data-ulas="${r.id}">★ Beri Ulasan</button>`);
   if (r.ulasan_rating) {
     tombol.push(`<span class="pill-label">Ulasanmu: ${'★'.repeat(r.ulasan_rating)}</span>`);
@@ -140,7 +140,7 @@ function kartu(r) {
 async function klikKartu(e) {
   const batal = e.target.closest('[data-batal]');
   if (batal) {
-    if (!confirm('Batalkan pengajuan ini? Kamar bisa langsung dipesan orang lain.')) return;
+    if (!confirm('Batalkan reservasi ini? Pengajuan tidak bisa dipulihkan dan kamar bisa dipesan orang lain.')) return;
     batal.disabled = true;
     try {
       await api(`akun?bagian=reservasi&id=${batal.dataset.batal}`, { method: 'PATCH' });

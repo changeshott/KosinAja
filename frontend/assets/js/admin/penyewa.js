@@ -241,8 +241,8 @@ function linkNotifikasi(p) {
   const kos = Panel.kos()?.nama_kos || p.nama_kos;
   const sisa = p.total_biaya - p.jumlah_dp;
   const pesan = p.status_pembayaran !== 'Lunas'
-    ? `Halo ${p.nama_lengkap}, kami dari ${kos}. Mengingatkan tagihan sewa Kamar ${p.nomor_kamar} (${p.kode_reservasi}) sebesar ${rupiah(sisa)} belum lunas. Terima kasih.`
-    : `Halo ${p.nama_lengkap}, kami dari ${kos}. Masa sewa Kamar ${p.nomor_kamar} berakhir ${tanggal(p.tanggal_keluar)}. Apakah ingin diperpanjang?`;
+    ? `Halo ${p.nama_lengkap}, kami dari ${kos}. Ini pengingat pembayaran sewa Kamar ${p.nomor_kamar} (reservasi ${p.kode_reservasi}). Sisa tagihan yang belum dibayar sebesar ${rupiah(sisa)}. Silakan hubungi pemilik jika sudah membayar atau ingin mengonfirmasi rincian tagihan. Terima kasih.`
+    : `Halo ${p.nama_lengkap}, kami dari ${kos}. Masa sewa Kamar ${p.nomor_kamar} akan berakhir pada ${tanggal(p.tanggal_keluar)}. Mohon beri tahu kami jika ingin membicarakan perpanjangan. Terima kasih.`;
   return `${p.wa}?text=${encodeURIComponent(pesan)}`;
 }
 

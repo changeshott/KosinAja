@@ -207,10 +207,6 @@ function pasangForm() {
   form.elements.tanggal_masuk.min = new Date().toISOString().slice(0, 10);
   form.elements.tanggal_masuk.value = besok;
   form.elements.durasi_sewa_bulan.addEventListener('change', renderRincian);
-  form.elements.is_survei_dahulu.addEventListener('change', (e) => {
-    document.querySelector('#field-survei').hidden = !e.target.checked;
-  });
-
   const wa = document.querySelector('#btn-wa');
   const catatan = isi('catatan');
   if (kos.pemilik_wa) {
@@ -234,8 +230,6 @@ function pasangForm() {
       durasi_sewa_bulan: Number(form.elements.durasi_sewa_bulan.value),
       is_survei_dahulu: survei,
     };
-    if (survei && form.elements.jadwal_survei.value) body.jadwal_survei = form.elements.jadwal_survei.value.replace('T', ' ') + ':00';
-
     const tombol = document.querySelector('#btn-ajukan');
     tombol.disabled = true;
     try {
