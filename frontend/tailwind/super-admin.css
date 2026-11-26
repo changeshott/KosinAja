@@ -1408,4 +1408,52 @@ body { @apply text-navy; }
 .link-detail:hover { @apply text-aksen-tua bg-biru-pucat; }
 .sa-search:focus-within { border-color: #004ac6; box-shadow: 0 0 0 3px #004ac61a }
 .sa-owner-detail { @apply rounded-2xl; }
+
+/* Sidebar tetap (fixed) saat konten utama di-scroll, dan menyesuaikan ukuran perangkat. */
+@media (min-width: 681px) {
+  .sa-layout { align-items: start }
+  .sa-side {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (min-width: 681px) and (max-height: 700px) {
+  .sa-side { padding-top: 20px; padding-bottom: 20px }
+  .sa-brand { margin-bottom: 24px }
+  .sa-side nav a { height: 44px }
+}
+
+@media (max-width: 680px) {
+  .sa-side {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    height: auto;
+    min-height: 0;
+    padding: 10px 16px;
+  }
+  .sa-brand { margin: 0 }
+  .sa-side nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+  }
+  .sa-side nav a { height: 44px; justify-content: center; gap: 8px }
+  .sa-layout { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) }
+  .toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)) }
+}
 }
