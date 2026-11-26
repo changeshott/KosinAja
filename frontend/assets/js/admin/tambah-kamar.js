@@ -14,6 +14,8 @@ const GRUP_FASILITAS = {
   'Fasilitas Kamar Mandi Dalam': { judul: 'B. Fasilitas Kamar Mandi Dalam', ikon: 'grup-kamar-mandi.svg', w: 10.5, h: 13.5 },
   'Fasilitas Bersama': { judul: 'C. Fasilitas Bersama & Gedung Kos', ikon: 'grup-gedung.svg', w: 13.5, h: 13.5 },
 };
+// Grup B hanya relevan kalau kamarnya punya kamar mandi dalam (lihat perbaruiGrupKamarMandi)
+const KATEGORI_MANDI_DALAM = 'Fasilitas Kamar Mandi Dalam';
 
 let kamarId = Number(new URLSearchParams(location.search).get('id')) || null;
 let kamarLama = null;
@@ -40,11 +42,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderFasilitas(fasilitas, kos.fasilitas.map((f) => f.id));
     renderPeraturan();
     if (kamarLama) isiForm(kamarLama);
+    perbaruiGrupKamarMandi();
   } catch (err) {
     toast(err.message || 'Gagal memuat form', true);
   }
 
   form.addEventListener('input', perbaruiInfoUkuran);
+  form.querySelectorAll('[name="kamar_mandi"]').forEach((r) => r.addEventListener('change', perbaruiGrupKamarMandi));
   form.addEventListener('submit', simpan);
   form.querySelector('#harga').addEventListener('input', formatHarga);
   document.querySelector('#btn-hapus').addEventListener('click', hapusKamar);
@@ -123,6 +127,17 @@ function isiForm(k) {
   galeri.isi(k.foto);
 }
 
+/**
+ * Grup "B. Fasilitas Kamar Mandi Dalam" hanya tampil saat Tipe Kamar Mandi = Dalam.
+ * Centangnya sengaja tidak dihapus supaya pilihan kembali utuh kalau pemilik berganti pikiran;
+ * grup yang tersembunyi diabaikan kumpulkanData() sehingga tidak ikut tersimpan.
+ */
+function perbaruiGrupKamarMandi() {
+  const grup = document.querySelector('.grup-cek[data-kategori="' + KATEGORI_MANDI_DALAM + '"]');
+  if (!grup) return;
+  grup.hidden = form.querySelector('[name="kamar_mandi"]:checked')?.value !== 'Dalam';
+}
+
 function perbaruiInfoUkuran() {
   const p = Number(form.elements.panjang_m.value), l = Number(form.elements.lebar_m.value);
   if (p > 0 && l > 0) {
@@ -154,6 +169,8 @@ async function kumpulkanData(publish) {
   const f = form.elements;
   const kamarIds = [], bersamaIds = [];
   for (const grup of document.querySelectorAll('.grup-cek')) {
+    // Grup tersembunyi (mis. fasilitas kamar mandi dalam saat pilihannya Luar) tidak ikut disimpan
+    if (grup.hidden) continue;
     const target = grup.dataset.lingkup === 'bersama' ? bersamaIds : kamarIds;
     grup.querySelectorAll('input[type="checkbox"][value]:checked').forEach((c) => target.push(Number(c.value)));
     target.push(...(await idFasilitasManual(grup)));
