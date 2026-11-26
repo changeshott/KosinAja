@@ -8,8 +8,7 @@ async function mulaiSuperAdmin() {
     return;
   }
   document.querySelector('#nama-admin').textContent = akun.nama_lengkap;
-  document.querySelector('.sa-logout').addEventListener('click', async (e) => { e.preventDefault(); await keluar(FRONTEND); });
-  document.querySelector('#cari').addEventListener('input', (e) => {
+  document.querySelector('.sa-logout').addEventListener('click', async (e) => { e.preventDefault(); await keluar(`${FRONTEND}masuk-super-admin`);
     state.q = e.target.value.trim(); state.page = 1; clearTimeout(state.timer); state.timer = setTimeout(muatData, 240);
   });
   document.querySelector('#prev').onclick = () => { if (state.page > 1) { state.page--; muatData(); } };
