@@ -1,0 +1,17 @@
+{
+    "name": "kosinaja/kosinaja",
+    "description": "KosinAja - sistem informasi pencarian kos dan reservasi berbasis web",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.1",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*",
+        "ext-json": "*"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

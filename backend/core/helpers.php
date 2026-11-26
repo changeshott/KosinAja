@@ -39,6 +39,16 @@ function terjemahkanErrorDb(PDOException $e): array
     };
 }
 
+/** DSN PDO PostgreSQL; sslmode (mis. 'require' untuk Supabase) hanya ditambahkan kalau diisi. */
+function dsnPostgres(array $c): string
+{
+    $dsn = "pgsql:host={$c['host']};port={$c['port']};dbname={$c['dbname']}";
+    if (!empty($c['sslmode'])) {
+        $dsn .= ";sslmode={$c['sslmode']}";
+    }
+    return $dsn;
+}
+
 /** Alamat situs ("http://localhost/KosinAja/"), untuk link di email. Bisa dikunci lewat config 'url_situs'. */
 function urlSitus(): string
 {

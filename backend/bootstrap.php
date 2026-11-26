@@ -5,14 +5,8 @@ declare(strict_types=1);
 
 define('BASE_PATH', __DIR__);
 
-if (!file_exists(BASE_PATH . '/config/config.php')) {
-    http_response_code(500);
-    header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'config/config.php belum ada. Salin dari config.example.php']);
-    exit;
-}
-
-$GLOBALS['__config'] = require BASE_PATH . '/config/config.php';
+// config.php (lokal) atau environment variable (server), lihat config/muat.php
+$GLOBALS['__config'] = require BASE_PATH . '/config/muat.php';
 
 function config(string $key)
 {

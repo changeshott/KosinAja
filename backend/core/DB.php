@@ -14,7 +14,7 @@ class DB
     {
         if (!self::$pdo) {
             $c = config('db');
-            self::$pdo = new PDO("pgsql:host={$c['host']};port={$c['port']};dbname={$c['dbname']}", $c['user'], $c['password'], [
+            self::$pdo = new PDO(dsnPostgres($c), $c['user'], $c['password'], [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,

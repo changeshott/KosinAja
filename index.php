@@ -2,11 +2,20 @@
 // Halaman awal http://localhost/KosinAja/ : cek koneksi database lalu tampilkan Beranda di URL yang sama.
 // Kalau database belum siap, yang tampil halaman cek ini. Tambahkan ?cek=1 untuk selalu melihatnya.
 
-$GLOBALS['__config'] = require __DIR__ . '/backend/config/config.php';
+// Di server tanpa Apache (nginx, EthioDeploy) semua URL masuk ke file ini; selain "/" diteruskan ke router.php.
+$__path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$__base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/') . '/';
+if ($__path !== $__base && $__path !== $__base . 'index.php' && !defined('KOSINAJA_ROUTER')) {
+    require __DIR__ . '/router.php';
+    exit;
+}
+
+$GLOBALS['__config'] = require __DIR__ . '/backend/config/muat.php';
 $db = $GLOBALS['__config']['db'];
+$sslmode = empty($db['sslmode']) ? '' : ";sslmode={$db['sslmode']}";
 
 try {
-    $pdo = new PDO("pgsql:host={$db['host']};port={$db['port']};dbname={$db['dbname']}", $db['user'], $db['password'], [
+    $pdo = new PDO("pgsql:host={$db['host']};port={$db['port']};dbname={$db['dbname']}$sslmode", $db['user'], $db['password'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
     $versi = $pdo->query('SHOW server_version')->fetchColumn();

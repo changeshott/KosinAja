@@ -19,3 +19,6 @@ node_modules/
 .idea/
 Thumbs.db
 desktop.ini
+
+# Composer (hanya untuk deteksi versi PHP saat deploy)
+/vendor/

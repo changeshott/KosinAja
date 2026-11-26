@@ -7,7 +7,10 @@ Frontend HTML + **Tailwind CSS v4** + JavaScript murni (tanpa framework JS), bac
 KosinAja/
 ├── index.php            buka http://localhost/KosinAja/ → cek database lalu tampilkan Beranda
 ├── 404.php              halaman "tidak ditemukan" (JSON untuk /api/...)
-├── .htaccess            URL bersih: /katalog, /admin/kamar, /api/katalog (lihat bagian URL)
+├── .htaccess            URL bersih di Apache/Laragon: /katalog, /admin/kamar, /api/katalog
+├── router.php           aturan URL yang sama untuk server tanpa Apache (nginx) — lihat bagian Deploy
+├── public/index.php     web root di server; meneruskan semua permintaan ke router.php
+├── composer.json        penanda versi PHP & ekstensi yang dibutuhkan saat deploy (tanpa dependency)
 ├── package.json         build Tailwind CSS (npm run build / npm run dev)
 │
 ├── database/
@@ -18,7 +21,7 @@ KosinAja/
 │
 ├── backend/             API JSON (PHP 8.1 + PDO PostgreSQL)
 │   ├── bootstrap.php    di-require semua file api/: config, autoload class, header JSON, error → JSON
-│   ├── config/          config.php (buat lokal; isi koneksi PostgreSQL)
+│   ├── config/          muat.php (pemilih sumber config), config.example.php (contoh), config.php (buat lokal)
 │   ├── core/            kerangka kecil yang dipakai semua fitur
 │   │   ├── DB.php           koneksi + helper query: DB::semua/satu/nilai/insert/update/transaksi
 │   │   ├── Request.php      baca body JSON/form & query string
@@ -62,37 +65,100 @@ Alur satu fitur selalu sama, jadi mudah ditelusuri:
    & 'C:\laragon\bin\postgresql\postgresql\bin\psql.exe' -U postgres -d kosinaja -f database/install.sql
    ```
 
-   Masukkan password user PostgreSQL `postgres` saat diminta. `install.sql` memasang skema, migrasi bernomor `001`–`006` dan `008`, lalu data contoh. Migrasi `007_password_super_admin.sql` disiapkan terpisah untuk akun super admin. Jalankan install ini hanya untuk database baru/kosong. Kalau database `kosinaja` sudah ada, jangan buat ulang atau menjalankan `install.sql` di atasnya karena seed bukan proses pembaruan.
+   Masukkan password user PostgreSQL `postgres` saat diminta. `install.sql` memasang skema, migrasi bernomor `001`–`006` dan `008`, lalu data contoh. Tidak ada migrasi bernomor `007`; nomor itu memang dilewati. Akun super admin tidak ikut dibuat oleh `install.sql` — lihat [`database/PANDUAN_SUPER_ADMIN.md`](database/PANDUAN_SUPER_ADMIN.md) kalau panel super admin mau dipakai. Jalankan install ini hanya untuk database baru/kosong. Kalau database `kosinaja` sudah ada, jangan buat ulang atau menjalankan `install.sql` di atasnya karena seed bukan proses pembaruan.
 
    Alternatif memakai HeidiSQL/pgAdmin: buat database `kosinaja`, lalu jalankan `skema.sql`, migrasi `001`–`006`, migrasi `008_perbaikan_kamar.sql`, dan terakhir `seed_dummy.sql`. Jangan jalankan `install.sql` lewat HeidiSQL karena file itu memakai perintah khusus `psql` (`\ir`).
 
-3. Pastikan `backend/config/config.php` ada. File ini tidak disertakan di Git karena berisi password; jika belum ada, buat file tersebut dengan isi berikut dan sesuaikan password serta port dengan PostgreSQL Laragon:
+3. Pastikan `backend/config/config.php` ada. File ini tidak disertakan di Git karena berisi password. Salin dari contoh yang sudah tersedia, lalu sesuaikan `password` dan `port` dengan PostgreSQL Laragon:
 
-   ```php
-   <?php
-   return [
-       'db' => [
-           'host' => '127.0.0.1',
-           'port' => '5432',
-           'dbname' => 'kosinaja',
-           'user' => 'postgres',
-           'password' => 'PASSWORD_POSTGRES_KAMU',
-       ],
-       'debug' => true,
-       'url_situs' => '',
-       'upload' => [
-           'max_bytes' => 2 * 1024 * 1024,
-           'mime' => ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'],
-       ],
-   ];
+   ```powershell
+   Copy-Item backend\config\config.example.php backend\config\config.php
    ```
 
-4. Di Laragon buka **Menu → PHP → Extensions**, aktifkan `pdo_pgsql`, lalu restart Apache jika baru mengubah ekstensi.
+   Semua kunci yang dikenali sudah ada di `config.example.php` beserta penjelasannya.
+
+4. Di Laragon buka **Menu → PHP → Extensions**, aktifkan `pdo_pgsql`, `mbstring`, dan `fileinfo`, lalu restart Apache jika baru mengubah ekstensi.
 5. Buka **http://localhost/KosinAja/**. Beranda dan katalog publik dapat dibuka tanpa login. URL **http://localhost/KosinAja/?cek=1** menampilkan status koneksi dan migrasi jika ingin memeriksa setup.
 
 ### Database yang sudah ada
 
 Jangan jalankan `install.sql` atau `seed_dummy.sql` lagi pada database yang berisi data. Jalankan hanya migrasi yang belum diterapkan, satu per satu sesuai urutan. Untuk database lama yang belum mendapat fitur verifikasi pemilik/super admin, ikuti [`database/PANDUAN_SUPER_ADMIN.md`](database/PANDUAN_SUPER_ADMIN.md), yang menjalankan `database/migrasi/migrasi_super_admin.sql`. Instalasi baru dari `skema.sql` sudah mencakup struktur tersebut, jadi migrasi khusus itu tidak diperlukan.
+
+## Deploy ke server online
+
+Project ini bisa dijalankan di hosting PHP tanpa Apache (nginx + PHP-FPM, misalnya EthioDeploy)
+dengan database PostgreSQL online (misalnya Supabase). Tidak ada file yang perlu diubah: yang
+membedakan lokal dan server hanya **dari mana config dibaca**.
+
+- **Lokal (Laragon)** — `backend/config/config.php` ada, jadi file itu yang dipakai.
+- **Server** — `config.php` tidak ikut Git, jadi `backend/config/muat.php` beralih membaca
+  *environment variable*.
+
+### 1. Pengaturan di panel hosting
+
+| Pengaturan | Nilai |
+|---|---|
+| Web root / document root | `public` |
+| Versi PHP | 8.1 atau lebih baru |
+| Ekstensi PHP | `pdo`, `pdo_pgsql`, `mbstring`, `fileinfo` |
+| Build command | tidak perlu (`composer.json` tanpa dependency); kalau wajib diisi: `composer install --no-dev --optimize-autoloader` |
+
+Permintaan masuk ke `public/index.php` → `router.php`, yang memakai aturan URL sama dengan
+`.htaccess`. Jadi `/katalog`, `/admin/kamar`, `/api/katalog`, dan `/uploads/...` tetap berfungsi,
+dan `/backend/...` serta `/database/...` tetap tidak bisa dibuka dari browser.
+
+### 2. Environment variable
+
+| Nama | Contoh isi | Keterangan |
+|---|---|---|
+| `DATABASE_URL` | `postgresql://user:password@host:6543/postgres?sslmode=require` | Connection string dari Supabase. Mengganti semua `DB_*` di bawah |
+| `DB_SSLMODE` | `require` | Wajib untuk Supabase. Tidak perlu kalau `sslmode` sudah ada di `DATABASE_URL` |
+| `APP_DEBUG` | `false` | **Selalu `false`** di server; `true` hanya sementara saat mencari error |
+| `URL_SITUS` | `https://nama-project.ethiodeploy.app/` | Dipakai untuk link di email lupa kata sandi |
+
+Kalau hosting tidak menyediakan `DATABASE_URL`, isi terpisah: `DB_HOST`, `DB_PORT`, `DB_NAME`,
+`DB_USER`, `DB_PASSWORD`, `DB_SSLMODE`. Password yang mengandung karakter khusus (`@`, `/`, `:`)
+aman ditulis di `DATABASE_URL` selama di-*URL encode* (`@` → `%40`, `/` → `%2F`).
+
+### 3. Pasang database
+
+Supabase memberi database `postgres` yang sudah jadi, jadi langkah `CREATE DATABASE` dilewati.
+Jalankan dari komputer sendiri memakai `psql` (ambil connection string di Supabase →
+**Project Settings → Database**):
+
+```powershell
+psql "postgresql://user:password@host:5432/postgres?sslmode=require" -f database/install.sql
+```
+
+`install.sql` memakai perintah khusus `psql` (`\ir`, `\set`), jadi **jangan** menempelkan isinya
+ke SQL Editor Supabase. Kalau hanya punya SQL Editor, jalankan berurutan satu per satu:
+`skema.sql` → migrasi `001`–`006` → `008_perbaikan_kamar.sql` → `seed_dummy.sql`.
+
+Dua ekstensi dibuat otomatis oleh skrip (`btree_gist` untuk mencegah double booking, `pg_trgm`
+untuk pencarian) dan keduanya tersedia di Supabase.
+
+`seed_dummy.sql` berisi data contoh beserta akun uji berpassword `password123`. Untuk situs yang
+dipakai sungguhan, lewati file itu dan buat akun sendiri lewat halaman daftar.
+
+Akun super admin tidak ikut dibuat skrip mana pun. Ikuti
+[`database/PANDUAN_SUPER_ADMIN.md`](database/PANDUAN_SUPER_ADMIN.md) kalau panel `/super-admin/`
+mau dipakai — buat hash kata sandi sendiri, jangan pakai hash contoh di `buat_super_admin.sql`.
+
+### 4. Cek setelah deploy
+
+Buka `https://alamat-situs/?cek=1`. Halaman itu menampilkan status koneksi database dan menyebut
+nama file migrasi yang belum dijalankan, jadi penyebab error langsung kelihatan tanpa perlu
+menyalakan `APP_DEBUG`.
+
+### Yang perlu diketahui
+
+- **Foto unggahan tidak permanen.** Foto disimpan ke `backend/uploads/`, yang ikut terhapus setiap
+  kali aplikasi di-deploy ulang di hosting dengan penyimpanan sementara. Foto contoh dari seed tetap
+  ada karena ikut Git. Supaya unggahan awet, foto perlu dipindah ke penyimpanan objek (Supabase Storage).
+- **Email lupa kata sandi belum terkirim.** Masih ditulis ke `backend/storage/email.log` di server,
+  bukan dikirim lewat SMTP. Lihat bagian *Lupa kata sandi* di bawah.
+- **Jangan unggah `backend/config/config.php` ke server.** Kalau file itu ada, environment variable
+  diabaikan dan koneksi akan memakai `127.0.0.1` milik server.
 
 ## CSS (Tailwind CSS v4)
 
@@ -185,7 +251,9 @@ Panel pemilik mengingat kos aktif di `localStorage` (`kosinaja.kosAktif`) dan `?
 ## URL
 
 Diatur `.htaccess` di root (Apache `mod_rewrite`, sudah aktif di Laragon). Tidak ada `.html`, `.php`,
-`frontend/` atau `backend/` di alamat yang dilihat pengguna.
+`frontend/` atau `backend/` di alamat yang dilihat pengguna. Di server tanpa Apache, aturan yang
+sama dijalankan `router.php` (lihat bagian [Deploy](#deploy-ke-server-online)) — kalau satu aturan
+di tabel bawah diubah, ubah di kedua file.
 
 | Alamat | File sebenarnya |
 |---|---|
@@ -209,7 +277,8 @@ Di JavaScript cukup panggil `api('katalog?q=...')`; alamat dasarnya dihitung di 
 ```
 
 Error dari database (nomor kamar dobel, double booking, kamar masih punya reservasi, dll.) sudah
-diterjemahkan ke pesan bahasa Indonesia. Set `'debug' => false` di config saat presentasi.
+diterjemahkan ke pesan bahasa Indonesia. Set `'debug' => false` di config saat presentasi
+(di server: `APP_DEBUG=false`).
 
 ## Login
 
@@ -264,7 +333,9 @@ Role `admin` = pemilik kos, `penyewa` = mahasiswa. Endpoint pemilik memanggil `A
 
 Belum ada server email (SMTP), jadi "email" reset ditulis ke `backend/storage/email.log`.
 Buka file itu, salin tautan `atur-sandi?token=...` ke browser. Untuk server online, ganti isi fungsi
-`kirimEmail()` di `backend/core/helpers.php` dengan `mail()`/PHPMailer, dan isi `url_situs` di config.
+`kirimEmail()` di `backend/core/helpers.php` dengan `mail()`/PHPMailer, dan isi `url_situs` di config
+(atau environment variable `URL_SITUS`). Sebelum diganti, fitur ini tetap "berhasil" di server tetapi
+emailnya hanya masuk ke log yang tidak bisa dibuka pengguna.
 
 ## Belum dibuat
 
